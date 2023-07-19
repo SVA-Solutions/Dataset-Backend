@@ -23,6 +23,7 @@ module.exports = {
     subCategory: require("../futurePedia/models/subcategory.models"),
     subsubCategory: require("../futurePedia/models/subsubcategory.models"),
     Categorybyproduct: require("../futurePedia/models/categorybyProduct.models"),
+    Dataset: require("../futurePedia/models/dataset.models"),
     
 
 };

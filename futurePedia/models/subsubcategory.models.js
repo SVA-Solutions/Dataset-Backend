@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const subSubCategorySchema = new mongoose.Schema({
+  Category:{type:Array},
   subCategory:{type:String},
   title: {
     type: String,

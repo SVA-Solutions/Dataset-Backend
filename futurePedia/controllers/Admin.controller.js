@@ -9,6 +9,7 @@ const category = db.Category
 const subcategory = db.subCategory
 const subsubcategory = db.subsubCategory
 const categorybyProduct = db.Categorybyproduct
+const dataset = db.Dataset
 const feature = db.Feature
 const pricing = db.Pricing
 const blog = db.Blog
@@ -31,6 +32,7 @@ module.exports = {
   categoryDelete,
 
   subcategoryList,
+  subcategoryListbid,
   addsubcategoryList,
   addsubcategory,
   subcategoryById,
@@ -49,6 +51,12 @@ module.exports = {
   categorybyproductById,
   categorybyproductUpdate,
   categorybyproductDelete,
+  
+  datasetList,
+  adddataset,
+  datasetById,
+  datasetUpdate,
+  datasetDelete,
 
 }
 
@@ -62,17 +70,20 @@ module.exports = {
 async function productList(req, res) {
   const list = []
   const data = await product.find({}).sort({ _id: -1 });
-
+  console.log("data",data)
   for(let i=0;data.length>i;++i){
     
     const Category = await category.findOne({_id:data[i]?.category})
     const subCategory = await subcategory.findOne({_id:data[i]?.subcategory})
     const subsubCategory = await subsubcategory.findOne({_id:data[i]?.subsubcategory})
 
-    
+    console.log("Category",Category)
+    console.log("subCategory",subCategory)
+    console.log("subsubCategory",subsubCategory)
     list.push({
       id:data[i]?._id,
       title:data[i]?.title,
+      type:data[i]?.type,
       category:Category?.title,
       subcategory:subCategory?.title,
       subsubcategory:subsubCategory?.title,
@@ -89,6 +100,7 @@ async function productList(req, res) {
 // Add product
 async function addproduct(req, res) {
   console.log("addproduct", req.body)
+  console.log("addproduct", req.files)
   var files = req.files;
   if (typeof files.image != "undefined") {
     var images = "";
@@ -98,10 +110,10 @@ async function addproduct(req, res) {
       var image = images.replace(/,\s*$/, "");
     }
   } else {
-    var image = req.body.image;
+    var image = req.body.dataset;
   }
-
-  const productData = new product({ 
+if(req.body.type=="Image"){
+  var productData = new product({ 
     title: req.body.title,
     shortDescription: req.body.shortDescription,
     description: req.body.description,
@@ -111,8 +123,66 @@ async function addproduct(req, res) {
     subsubcategory: req.body.subsubcategory,
     TotalVolume: req.body.TotalVolume,
     categorybyproduct: req.body.categorybyproduct,
+    Demographic:req.body.Demographic,
+    Countries:req.body.Countries,
+    Volume:req.body.Volume,
+    AgeGroups:req.body.AgeGroups,
+    Enviorment:req.body.Enviorment,
+    Format:req.body.Format,
+    Resolution:req.body.Resolution,
+    Annotation:req.body.Annotation,
+   type:req.body.type,
     image: image,
-  });
+  })}
+  else if(req.body.type=="Audio"){
+    var productData = new product({ 
+      title: req.body.title,
+      shortDescription: req.body.shortDescription,
+      description: req.body.description,
+      uses: req.body.uses,
+      category: req.body.category,
+      subcategory: req.body.subcategory,
+      subsubcategory: req.body.subsubcategory,
+      TotalVolume: req.body.TotalVolume,
+      categorybyproduct: req.body.categorybyproduct,
+      language:req.body.language,
+      Country:req.body.Country,
+      Dilacts:req.body.Dilacts,
+      Genderdistribution:req.body.Genderdistribution,
+      AgeGroups:req.body.AgeGroups,
+      Enviorment:req.body.Enviorment,
+      BitDepth:req.body.BitDepth,
+      Format:req.body.Format,
+      SampleRate:req.body.SampleRate,
+      Channel:req.body.Channel,
+      AudioFileDuration:req.body.AudioFileDuration,
+      type:req.body.type,
+      image: image,
+    })
+  }
+  else if(req.body.type=="Text"){
+    var productData = new product({ 
+      title: req.body.title,
+      shortDescription: req.body.shortDescription,
+      description: req.body.description,
+      uses: req.body.uses,
+      category: req.body.category,
+      subcategory: req.body.subcategory,
+      subsubcategory: req.body.subsubcategory,
+      TotalVolume: req.body.TotalVolume,
+      categorybyproduct: req.body.categorybyproduct,
+      DatasetType:req.body.DatasetType,
+      Volume:req.body.Volume,
+      MediaType:req.body.MediaType,
+      LanguagePain:req.body.LanguagePain,
+      Type:req.body.Type,
+      WordCount:req.body.WordCount,
+      Format:req.body.Format,
+      Annotation:req.body.Annotation,
+      type:req.body.type,
+      image: image,
+    })
+  }
 
   db.Product.create(productData, async function (err, result) {
     if (result) {
@@ -121,6 +191,7 @@ async function addproduct(req, res) {
         status: "1",
       });
     } else {
+      console.log("err",err)
       res.status(200).json({
         message: "error",
         status: "0",
@@ -167,6 +238,7 @@ async function productById(req, res) {
     created_at:data.created_at,
     id: data._id,
     image: PicUrl + data.image,
+    dataset: data.dataset?.map((item)=>{return(PicUrl+item)}),
   };
   const categorybyproduct = await product.find({category:data.category})
   var simmilarproduct=[]
@@ -434,7 +506,29 @@ async function subcategoryList(req, res) {
     status: "1"
   })
 }
+//  subCategoryListbysubcat 
+async function subcategoryListbid(req, res) {
+  console.log("subcategoryListbid", req.body)
 
+  const data = await subcategory.find({status:"Active",category: { $in: req.body.id }}).sort({ _id: -1 });
+  var list = []
+  for(let i=0;data.length>i;++i){
+    var categorydetail = await db.Category.find({_id:data[i].subCategory})
+    list.push({
+      title:data[i].title,
+      id:data[i]._id,
+      subCategorytitle:categorydetail.title,
+      subCategory:data[i].subCategory,
+      image:data[i].image
+    })
+  }
+
+  return res.status(200).json({
+    data: list,
+    messgae: "success",
+    status: "1"
+  })
+}
 // Add subCategory
 async function addsubcategory(req, res) {
   console.log("addsubcategoryyyyy", req.body)
@@ -473,9 +567,11 @@ async function addsubcategory(req, res) {
 }
 async function addsubcategoryList(req, res) {
   const CategoryList = await subcategory.find({category:req.body.id})
+  const categorybyProductlist = await categorybyProduct.find({Category:{ $in: req.body.id }})
   console.log("Category",CategoryList)
   return res.status(200).json({
     Category: CategoryList,
+    categorybyProductlist:categorybyProductlist,
     messgae: "success",
     status: "1"
   })
@@ -573,7 +669,8 @@ async function addsubsubcategory(req, res) {
 
   const categoryData = new subsubcategory({
     title: req.body.title,
-    subCategory: req.body.subcategory,
+    subCategory: req.body.subCategory,
+    Category: req.body.Category
   });
 
   db.subsubCategory.create(categoryData, async function (err, result) {
@@ -696,6 +793,7 @@ async function addcategorybyproduct(req, res) {
 
   const categoryData = new categorybyProduct({
     title: req.body.title,
+    Category:req.body.Category,
     subCategory: req.body.subcategory,
   });
 
@@ -757,6 +855,149 @@ async function categorybyproductDelete(req, res) {
   console.log("categoryDelete", req.body)
 
   await db.Categorybyproduct.updateOne({ _id: req.body.id },
+    {
+      status: "Inactive",
+    }, function (err, result) {
+      if (result) {
+        return res.status(200).json({
+          message: "success",
+          status: "1",
+        });
+      } else {
+        return res.status(200).json({
+          message: "Error",
+          status: "0",
+        });
+      }
+    }
+  )
+}
+
+
+// -------dataset------------
+
+//  datasetList 
+async function datasetList(req, res) {
+  console.log("datasetList", req.body)
+  
+  const data = await db.Dataset.find({}).sort({ _id: -1 });
+  var list = []
+  for(let i=0;data.length>i;++i){
+  
+    list.push({
+      Age:data[i].Age,
+      Gender:data[i].Gender,
+      Annotation:data[i].Annotation,
+      productId:data[i].productId,
+      image:data[i].image
+    })
+  }
+
+  return res.status(200).json({
+    data: list,
+    messgae: "success",
+    status: "1"
+  })
+}
+
+// Add dataset
+async function adddataset(req, res) {
+  console.log("adddataset", req.body)
+  console.log("adddataset",req.files)
+
+  var files = req.files;
+  if (typeof files != "undefined")
+ { if (typeof files.image != "undefined") {
+    var images = "";
+    for (var j = 0; j < files.image.length; j++) {
+      var image_name = files.image[j].filename;
+      images += image_name + ",";
+      var image = images.replace(/,\s*$/, "");
+    }
+  }}
+  if(req.body.type=="Image")
+ { var datasetData = new db.Dataset({
+    productId:req.body.productId,
+    Age:req.body.age,
+    Gender:req.body.gender,
+    Annotation:req.body.Annotation,
+    image:image
+  });}
+  else if(req.body.type=="Text"){
+    var datasetData = new db.Dataset({
+    productId:req.body.productId,
+    English:req.body.English,
+    Language:req.body.Language,
+  });
+  }
+  else if(req.body.type=="Audio"){
+    var datasetData = new db.Dataset({
+      productId:req.body.productId,
+      channel1:req.body.channel1,
+      channel2:req.body.channel2,
+      Format:req.body.Format,
+      image:image
+  });
+  }
+
+  db.Dataset.create(datasetData, async function (err, result) {
+    if (result) {
+      return res.status(200).json({
+        message: "success",
+        status: "1",
+      });
+    } else {
+      console.log("err",err)
+      res.status(200).json({
+        message: "error",
+        status: "0",
+      });
+    }
+  });
+}
+
+// dataset by id
+async function datasetById(req, res) {
+  console.log("datasetById", req.body)
+
+  const data = await db.Dataset.findOne({ _id: req.body.id })
+
+  return res.status(200).json({
+    data: data,
+    messgae: "success",
+    status: "1"
+  })
+}
+
+// dataset Update
+async function datasetUpdate(req, res) {
+  console.log("datasetUpdate", req.body)
+
+
+  await db.Dataset.updateOne({ _id: req.body.id },
+    {
+      title: req.body.title,
+    }, function (err, result) {
+      if (result) {
+        return res.status(200).json({
+          message: "success",
+          status: "1",
+        });
+      } else {
+        return res.status(200).json({
+          message: "Error",
+          status: "0",
+        });
+      }
+    }
+  )
+}
+
+// dataset Delete
+async function datasetDelete(req, res) {
+  console.log("datasetDelete", req.body)
+
+  await db.Dataset.updateOne({ _id: req.body.id },
     {
       status: "Inactive",
     }, function (err, result) {

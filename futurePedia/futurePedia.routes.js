@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const {uploadPhoto} = require('../futurePedia/middleware/uploadPhoto');
+const {UploadAudio} = require('../futurePedia/middleware/uploadAudio')
 const adminController = require("../futurePedia/controllers/Admin.controller");
 const userController = require("../futurePedia/controllers/User.controller")
 // ------ADMIN----------
 
 
 // ----product--------
-router.post("/addproduct",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),addproduct);
+router.post("/addproduct",uploadPhoto("product", [{ name: "image", maxCount: 1 }]), addproduct);
 router.get("/productList",productList);
 router.post("/productById",productById);
 router.post("/productUpdate",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),productUpdate);
@@ -22,6 +23,7 @@ router.post("/categoryUpdate",categoryUpdate);
 router.post("/categoryDelete",  categoryDelete)
 // ----subcategory--------
 router.post("/addsubcategory",uploadPhoto("subcategory", [{ name: "image", maxCount: 1 }]),addsubcategory);
+router.post("/subcategoryListbid",subcategoryListbid);
 router.get("/subcategoryList",subcategoryList);
 router.post("/addsubcategoryList",addsubcategoryList);
 router.post("/subcategoryById",subcategoryById);
@@ -40,6 +42,14 @@ router.post("/addcategorybyproduct",addcategorybyproduct);
 router.post("/categorybyproductById",categorybyproductById);
 router.post("/categorybyproductUpdate",categorybyproductUpdate);
 router.post("/categorybyproductDelete",  categorybyproductDelete)
+// ----subsubcategory--------
+router.get("/datasetList",datasetList);
+router.post("/adddataset",uploadPhoto("upload",[{ name: "image", maxCount: 1 }]),adddataset);
+router.post("/adddataset/audio",UploadAudio("upload",[{ name: "image", maxCount: 1 }]),adddataset);
+router.post("/adddataset/Text",adddataset);
+router.post("/datasetById",datasetById);
+router.post("/datasetUpdate",datasetUpdate);
+router.post("/datasetDelete",  datasetDelete)
 
 
 
@@ -48,6 +58,7 @@ router.post("/home",Homepage)
 router.post("/filter",filter)
 router.post("/regexapi",regexapi)
 router.post("/productDetailPage",productDetailPage)
+router.post("/emailfordatabase",emailfordatabase)
 
 module.exports = router;
 
@@ -155,6 +166,12 @@ function subcategoryList(req, res,next){
     .then((data) => console.log("subcategoryList"))
     .catch((err) => next(err));
 }
+function subcategoryListbid(req, res,next){
+  adminController
+    .subcategoryListbid(req, res)
+    .then((data) => console.log("subcategoryListbid"))
+    .catch((err) => next(err));
+}
 function subcategoryById(req, res,next){
   adminController
     .subcategoryById(req, res)
@@ -246,6 +263,39 @@ function categorybyproductDelete(req, res,next){
 }
 
 
+// ----dataset--------
+
+function datasetList(req, res,next){
+  adminController
+    .datasetList(req, res)
+    .then((data) => console.log("datasetList"))
+    .catch((err) => next(err));
+}
+function adddataset(req, res,next){
+  adminController
+    .adddataset(req, res)
+    .then((data) => console.log("adddataset"))
+    .catch((err) => next(err));
+}
+function datasetById(req, res,next){
+  adminController
+    .datasetById(req, res)
+    .then((data) => console.log("datasetById"))
+    .catch((err) => next(err));}
+function datasetUpdate(req, res,next){
+  adminController
+    .datasetUpdate(req, res)
+    .then((data) => console.log("datasetUpdate"))
+    .catch((err) => next(err));
+}
+function datasetDelete(req, res,next){
+  adminController
+    .datasetDelete(req, res)
+    .then((data) => console.log("datasetDelete"))
+    .catch((err) => next(err));
+}
+
+
 
 
 
@@ -273,6 +323,12 @@ function productDetailPage(req, res,next){
   userController
     .productDetailPage(req, res)
     .then((data) => console.log("productDetailPage"))
+    .catch((err) => next(err));
+}
+function emailfordatabase(req, res,next){
+  userController
+    .emailfordatabase(req, res)
+    .then((data) => console.log("emailfordatabase"))
     .catch((err) => next(err));
 }
 

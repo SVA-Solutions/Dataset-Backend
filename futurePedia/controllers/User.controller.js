@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { productList } = require("./Admin.controller");
 const Pricing = require("twilio/lib/rest/Pricing");
-const { Category } = require("../../_helpers/db");
+const { Category, Dataset } = require("../../_helpers/db");
+var nodemailer = require("nodemailer");
+var smtpTransports = require("nodemailer-smtp-transport");
 var moment = require("moment");
 const product = db.Product
 const category = db.Category
@@ -17,7 +19,8 @@ module.exports = {
     Homepage,
     filter,
     regexapi,
-    productDetailPage
+    productDetailPage,
+    emailfordatabase
 }
 
 
@@ -42,7 +45,7 @@ async function Homepage(req, res) {
     console.log("subcategorylist", subcategorylist)
     for (let j = 0; subcategorylist.length > j; ++j) {
         console.log("subsubcategorylist1", subcategorylist[j]._id)
-        const subsubcategorylist = await subsubcategory.find({ subCategory: { $in: String(subcategorylist[j]._id) } });
+        const subsubcategorylist = await subsubcategory.find({ subCategory: subcategorylist[j]._id  ,Category: { $in: req.body.id } });
 
         subarraylist.push({
             id: subcategorylist[j].id,
@@ -57,6 +60,7 @@ async function Homepage(req, res) {
         var productlist = await product.find({ categorybyproduct: categorybyProductlist[j]._id })
         const list = []
         for (let d = 0; productlist.length > d; ++d) {
+            const dataset = await db.Dataset.find({productId:productlist[d]._id})
             list.push({
                 title: productlist[d].title,
                 id: productlist[d]._id,
@@ -69,6 +73,7 @@ async function Homepage(req, res) {
                 categorybyproduct: productlist[d].categorybyproduct,
                 TotalVolume: productlist[d].TotalVolume,
                 image: PicUrl + productlist[d].image,
+                dataset:dataset
             })
         }
         productlistarray.push({
@@ -107,17 +112,16 @@ async function filter(req, res) {
     console.log("subcategorylist", subcategorylist)
     for (let j = 0; subcategorylist.length > j; ++j) {
         console.log("subsubcategorylist", subcategorylist[j]._id)
-        const subsubcategorylist = await subsubcategory.find({ subCategory: { $in: String(subcategorylist[j]._id) } });
+        const subsubcategorylist = await subsubcategory.find({ subCategory: subcategorylist[j]._id ,Category: { $in: req.body.id }});
 
         subarraylist.push({
             id: subcategorylist[j].id,
             title: subcategorylist[j].title,
-            
             image: categoryurl + subcategorylist[j].image,
             data: subsubcategorylist
         })
     }
-    const categorybyProductlist = await categorybyProduct.find({})
+    const categorybyProductlist = await categorybyProduct.find({Category:{ $in: req.body.id }})
     const productlistarray = []
     for (let j = 0; categorybyProductlist.length > j; ++j) {
         const param1 = req.body.category
@@ -172,6 +176,7 @@ async function filter(req, res) {
         for (let d = 0; productlist4.length > d; ++d) {
             list4.push({
                 title: productlist4[d].title,
+                id: productlist4[d]._id,
                 shortDescription: productlist4[d].shortDescription,
                 description: productlist4[d].description,
                 uses: productlist4[d].uses,
@@ -262,9 +267,33 @@ async function productDetailPage(req,res){
         var PicUrl =
             "http://" + req.get("host") + "/uploads/product/";
     }
+   
+    if (__dirname == "/jinni/backend/jinni/controllers") {
+        var datasetUrl = `${process.env.URL}/uploads/upload/`;
+    } else {
+        var datasetUrl =
+            "http://" + req.get("host") + "/uploads/upload/";
+    }
 
 
     var productlist = await product.findOne({_id:req.body.id})
+    var datasetlist = []
+    var dataset = await db.Dataset.find({productId:req.body.id})
+    for (let d = 0; dataset.length > d; ++d) {
+        datasetlist.push({
+            productId:dataset[d].productId,
+            Age:dataset[d].Age,
+            Gender:dataset[d].Gender,
+            Annotation:dataset[d].Annotation,
+            channel1:dataset[d].channel1,
+            channel2:dataset[d].channel2,
+            English:dataset[d].English,
+            Language:dataset[d].Language,
+            Format:dataset[d].Format,
+            image:datasetUrl+dataset[d].image
+        });
+    }
+    console.log("dataset",dataset)
     var categorydata = await db.Category.findOne({_id:productlist.category})
     const list = {
         title: productlist.title,
@@ -273,12 +302,34 @@ async function productDetailPage(req,res){
         description: productlist.description,
         uses: productlist.uses,
         TotalVolume: categorydata?.TotalVolume,
+        type: productlist?.type,
         category: categorydata.title,
         subcategory: productlist.subcategory,
         subsubcategory: productlist.subsubcategory,
         categorybyproduct: productlist.categorybyproduct,
+        language: productlist.language,
+        Country: productlist.Country,
+        Dilacts: productlist.Dilacts,
+        Genderdistribution: productlist.Genderdistribution,
+        AgeGroups: productlist.AgeGroups,
+        Enviorment: productlist.Enviorment,
+        BitDepth: productlist.BitDepth,
+        SampleRate: productlist.SampleRate,
+        Channel: productlist.Channel,
+        AudioFileDuration: productlist.AudioFileDuration,
+        Demographic: productlist.Demographic,
+        Countries: productlist.Countries,
+        Format: productlist.Format,
+        Resolution: productlist.Resolution,
+        Annotation: productlist.Annotation,
+        Volume: productlist.Volume,
+        MediaType: productlist.MediaType,
+        LanguagePain: productlist.LanguagePain,
+        Type: productlist.Type,
+        WordCount: productlist.WordCount,
         updatedAt:productlist.updatedAt,
         image: PicUrl + productlist.image,
+        dataset:datasetlist,
     }
 
      
@@ -287,3 +338,73 @@ async function productDetailPage(req,res){
         product : list
     })
 }
+
+async function emailfordatabase(req, res) {
+    console.log("forgotpassword code send", req.body);
+    const email_number = req.body.email;
+    var dataset = await db.Dataset.find({productId:req.body.productId})
+    console.log("dataset",dataset)
+    if (__dirname == "/jinni/backend/jinni/controllers") {
+        var datasetUrl = `${process.env.URL}/uploads/upload/`;
+    } else {
+        var datasetUrl =
+            "http://" + req.get("host") + "/uploads/upload/";
+    }
+    mailOptions = {
+      from: "aditya.sharma@indiaresults.com",
+      to: req.body.email,
+      subject: "Verification Code",
+      html: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+      <div style="margin:50px auto;width:70%;padding:20px 0">
+        <div style="border-bottom:1px solid #eee">
+        <img
+        src="https://macgence.com/wp-content/uploads/2023/06/Macgence-Final-BI_Macgence-Main.webp"
+        alt="macgence.com"
+        style="height: 90px; max-width: 100%; width: 157px;"
+        height="50"
+        width="157"
+        />
+        </div>
+        <p style="font-size:1.1em">Hi,  ${req.body.name}</p>
+        <p style="font-size:1.1em">${email_number}</p>
+        <p style="font-size:1.1em">${req.body.company}</p>
+        <p>Thank you for choosing macgence.com. Here is Your sample dataset</p>
+        <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;"></h2>
+        <p style="font-size:0.9em;">Regards,<br />macgence.com</p>
+        <hr style="border:none;border-top:1px solid #eee" />
+        <div style="padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+          <p>macgence.com</p>
+          <a  href="mailto:info@macgence.com?cc=secondemail@example.com &bcc=lastemail@example.com&subject=Mail from our Website&body=macgence Team"  style="color: #666;"  target="_blank" > info@macgence.ae  </a>
+          </div>
+          <a  href=${datasetUrl+dataset[0].image}  style="color: #666;"  target="_blank" > Click Here To Download  </a>
+      </div>
+    </div>`,
+    };
+    
+    
+      var smtpTransportss = nodemailer.createTransport(
+        smtpTransports({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: "aditya.sharma@indiaresults.com",
+            pass: "Admin@1234",
+          },
+        })
+      );
+      smtpTransportss.sendMail(mailOptions, function (error, response) {
+        if (error) {
+          console.log(error);
+          res.end("error");
+        } else {
+          console.log("Mail sent");
+          res.status(200).json({
+            message: "Check Your Mail for Verification Code.",
+            status: "1",
+          });
+        }
+      });
+   
+  }

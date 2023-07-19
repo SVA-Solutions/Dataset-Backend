@@ -8,9 +8,11 @@ function jwt() {
     return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
         path: [
             // public routes that don't require authenticationss
+            '/macgini/adddataset/audio',
             '/',
             '/macgini/addproduct',
             '/macgini/productList',
+            '/macgini/adddataset',
             '/macgini/addcategory',
             '/macgini/categoryById',
             '/macgini/categoryDelete',
@@ -19,6 +21,7 @@ function jwt() {
             '/macgini/addcategoryList',
             '/macgini/addsubcategoryList',
             '/macgini/addsubsubcategoryList',
+            '/macgini/subcategoryListbid',
             '/macgini/subcategoryList',
             '/macgini/subsubcategoryList',
             '/macgini/addsubcategory',
@@ -29,6 +32,11 @@ function jwt() {
             '/macgini/filter',
             '/macgini/productDetailPage',
             '/macgini/productList',
+            '/macgini/categorybyproductList',
+            '/macgini/datasetList',
+            '/macgini/adddataset/Text',
+            '/macgini/emailfordatabase'
+        
         ]
     });
 }
