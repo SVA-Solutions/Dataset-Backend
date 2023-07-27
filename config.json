@@ -1,4 +1,4 @@
 ﻿{
-    "connectionString": "mongodb://Findup:Admin%401234@127.0.0.1:27017/macgini",
+    "connectionString": "mongodb://superuser:Password@192.99.169.67:27017/admin",
     "secret": "8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc02o"
 }
