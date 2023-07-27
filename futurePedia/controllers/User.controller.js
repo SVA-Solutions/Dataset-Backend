@@ -13,6 +13,7 @@ const category = db.Category
 const subcategory = db.subCategory
 const subsubcategory = db.subsubCategory
 const categorybyProduct = db.Categorybyproduct
+const User = db.User
 
 
 module.exports = {
@@ -20,7 +21,8 @@ module.exports = {
     filter,
     regexapi,
     productDetailPage,
-    emailfordatabase
+    emailfordatabase,
+    login
 }
 
 
@@ -72,6 +74,8 @@ async function Homepage(req, res) {
                 subsubcategory: productlist[d].subsubcategory,
                 categorybyproduct: productlist[d].categorybyproduct,
                 TotalVolume: productlist[d].TotalVolume,
+                Volume: productlist[d].Volume,
+                AudioFileDuration: productlist[d].AudioFileDuration,
                 image: PicUrl + productlist[d].image,
                 dataset:dataset
             })
@@ -148,6 +152,8 @@ async function filter(req, res) {
                 subcategory: productlist[d].subcategory,
                 subsubcategory: productlist[d].subsubcategory,
                 categorybyproduct: productlist[d].categorybyproduct,
+                Volume: productlist[d].Volume,
+                AudioFileDuration: productlist[d].AudioFileDuration,
                 image: PicUrl + productlist[d].image,
             })
         }
@@ -184,6 +190,8 @@ async function filter(req, res) {
                 subcategory: productlist4[d].subcategory,
                 subsubcategory: productlist4[d].subsubcategory,
                 categorybyproduct: productlist4[d].categorybyproduct,
+                Volume: productlist[d].Volume,
+                AudioFileDuration: productlist[d].AudioFileDuration,
                 image: PicUrl + productlist4[d].image,
             })
         }
@@ -331,11 +339,28 @@ async function productDetailPage(req,res){
         image: PicUrl + productlist.image,
         dataset:datasetlist,
     }
-
-     
+    var similarproductlist = await product.find({type:productlist.type})
+    var similarlist = []
+    for (let j = 0; similarproductlist.length > j; ++j) {
+            similarlist.push({
+                title: similarproductlist[j].title,
+                id: similarproductlist[j]._id,
+                shortDescription: similarproductlist[j].shortDescription,
+                description: similarproductlist[j].description,
+                uses: similarproductlist[j].uses,
+                category: similarproductlist[j].category,
+                subcategory: similarproductlist[j].subcategory,
+                subsubcategory: similarproductlist[j].subsubcategory,
+                categorybyproduct: similarproductlist[j].categorybyproduct,
+                TotalVolume: similarproductlist[j].TotalVolume,
+                image: PicUrl + similarproductlist[j].image,
+                
+            })
+        }
 
     return res.status(200).json({
-        product : list
+        product : list,
+        similarproductlist:similarlist
     })
 }
 
@@ -408,3 +433,70 @@ async function emailfordatabase(req, res) {
       });
    
   }
+  // Login Api
+async function login(req, res) {
+    console.log("login", req.body)
+
+    if (req.body.email == "") {
+        return res.status(200).json({
+            message: language.Email_is_Required,
+            status: "0",
+        });
+    }
+
+    if (req.body.password == "") {
+        return res.status(200).json({
+            message: language.Password_is_Required,
+            status: "0",
+        });
+    }
+
+    const user = await User.findOne({ email: req.body.email.toLowerCase(), status: "Active" });
+    if (!user) {
+        return res.status(200).json({ message: "User Not found", status: "0" });
+    }
+
+    if (!user) {
+        res.status(200).json({ message: "User Not found", status: "0" });
+    } else {
+        if (user && bcrypt.compareSync(req.body.password, user.password)) {
+            const token = jwt.sign({ sub: user.id }, config.secret, {
+                expiresIn: "365d",
+            });
+            db.User.updateOne(
+                { _id: user.id },
+                {
+                    $set: {
+                        token: token,
+                    },
+                },
+                async function (err, result) {
+                    if (result) {
+                        const Users = await User.findOne({ email: req.body.email });
+                        Userdata = {
+                            full_name: Users?.full_name,
+                            email: Users?.email,
+                            role: Users?.role_id,
+                            created_at: Users?.created_at,
+                            id: Users?._id,
+                        };
+
+                        console.log("Userdata", Userdata);
+                        res.status(200).json({
+                            message: " Success",
+                            data: Userdata,
+                            status: "1",
+                        });
+                    } else {
+                        res.status(200).json({ message: "User Not Login", status: "0" });
+                    }
+                }
+            );
+        } else {
+            res
+                .status(200)
+                .json({ message: "Invalid Email & Password", status: "0" });
+        }
+    }
+
+}

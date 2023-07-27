@@ -19,6 +19,7 @@ try {
     }
 module.exports = {
     Product: require("../futurePedia/models/product.models"),
+    User: require("../futurePedia/models/user.model"),
     Category: require("../futurePedia/models/category.models"),
     subCategory: require("../futurePedia/models/subcategory.models"),
     subsubCategory: require("../futurePedia/models/subsubcategory.models"),

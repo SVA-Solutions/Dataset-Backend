@@ -35,7 +35,14 @@ function jwt() {
             '/macgini/categorybyproductList',
             '/macgini/datasetList',
             '/macgini/adddataset/Text',
-            '/macgini/emailfordatabase'
+            '/macgini/emailfordatabase',
+            '/macgini/datasetDelete',
+            '/macgini/userList',
+            '/macgini/addUser',
+            '/macgini/userById',
+            '/macgini/userUpdate',
+            '/macgini/userDelete',
+            '/macgini/login',
         
         ]
     });

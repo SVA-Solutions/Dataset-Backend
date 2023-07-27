@@ -8,6 +8,12 @@ const userController = require("../futurePedia/controllers/User.controller")
 // ------ADMIN----------
 
 
+// ----user--------
+router.get("/userList", userList);
+router.post("/addUser",addUser);
+router.post("/userById",userById);
+router.post("/userUpdate",userUpdate);
+router.post("/userDelete",userDelete)
 // ----product--------
 router.post("/addproduct",uploadPhoto("product", [{ name: "image", maxCount: 1 }]), addproduct);
 router.get("/productList",productList);
@@ -59,6 +65,7 @@ router.post("/filter",filter)
 router.post("/regexapi",regexapi)
 router.post("/productDetailPage",productDetailPage)
 router.post("/emailfordatabase",emailfordatabase)
+router.post("/login",login)
 
 module.exports = router;
 
@@ -71,6 +78,38 @@ router.get("/",function(req,res,next){
 
 
 
+
+// ----product--------
+
+function userList(req, res,next){
+  adminController
+    .userList(req, res)
+    .then((data) => console.log("userList"))
+    .catch((err) => next(err));
+}
+function addUser(req, res,next){
+  adminController
+    .addUser(req, res)
+    .then((data) => console.log("addUser"))
+    .catch((err) => next(err));
+}
+function userById(req, res,next){
+  adminController
+    .userById(req, res)
+    .then((data) => console.log("userById"))
+    .catch((err) => next(err));}
+function userUpdate(req, res,next){
+  adminController
+    .userUpdate(req, res)
+    .then((data) => console.log("userUpdate"))
+    .catch((err) => next(err));
+}
+function userDelete(req, res,next){
+  adminController
+    .userDelete(req, res)
+    .then((data) => console.log("userDelete"))
+    .catch((err) => next(err));
+}
 
 // ----product--------
 
@@ -329,6 +368,12 @@ function emailfordatabase(req, res,next){
   userController
     .emailfordatabase(req, res)
     .then((data) => console.log("emailfordatabase"))
+    .catch((err) => next(err));
+}
+function login(req, res,next){
+  userController
+    .login(req, res)
+    .then((data) => console.log("login"))
     .catch((err) => next(err));
 }
 
