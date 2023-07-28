@@ -226,7 +226,7 @@ async function productById(req, res) {
     var PicUrl = `${process.env.URL}/uploads/product/`;
   } else {
     var PicUrl =
-      "http://" + req.get("host") + "/uploads/product/";
+    "http://" + "dataapi.macgence.com" + "/uploads/product/";
   }
   const data = await product.findOne({ _id: req.body.id })
   const features = await feature.findOne({ _id: data.features })

@@ -39,7 +39,7 @@ async function Homepage(req, res) {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
-            "http://" + req.get("host") + "/uploads/subcategory/";
+            "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
     const categorylist = await category.find({});
 
@@ -108,7 +108,7 @@ async function filter(req, res) {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
-            "http://" + req.get("host") + "/uploads/subcategory/";
+        "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
     const categorylist = await category.find({});
 
@@ -218,7 +218,7 @@ async function regexapi(req, res) {
         var categoryurl = `${process.env.URL}/uploads/category/`;
     } else {
         var categoryurl =
-            "http://" + req.get("host") + "/uploads/category/";
+        "http://" + "dataapi.macgence.com" + "/uploads/category/";
     }
     const categorylist = await category.find({});
 
@@ -274,14 +274,14 @@ async function productDetailPage(req,res){
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-            "http://" + req.get("host") + "/uploads/product/";
+        "http://" + "dataapi.macgence.com" + "/uploads/product/";
     }
    
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var datasetUrl = `${process.env.URL}/uploads/upload/`;
     } else {
         var datasetUrl =
-            "http://" + req.get("host") + "/uploads/upload/";
+        "http://" + "dataapi.macgence.com" + "/uploads/upload/";
     }
 
 
@@ -374,7 +374,7 @@ async function emailfordatabase(req, res) {
         var datasetUrl = `${process.env.URL}/uploads/upload/`;
     } else {
         var datasetUrl =
-            "http://" + req.get("host") + "/uploads/upload/";
+        "http://" + "dataapi.macgence.com" + "/uploads/upload/";
     }
     mailOptions = {
       from: "aditya.sharma@indiaresults.com",
