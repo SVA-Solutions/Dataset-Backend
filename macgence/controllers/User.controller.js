@@ -33,7 +33,8 @@ async function Homepage(req, res) {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-            "http://" + req.get("host") + "/uploads/product/";
+        "http://" + "dataapi.macgence.com" + "/uploads/product/";
+       
     }
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
