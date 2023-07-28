@@ -23,6 +23,8 @@ module.exports = {
   productById,
   productUpdate,
   productStatusUpdate,
+  productDelete,
+  productByIdforupdate,
 
   categoryList,
   addcategoryList,
@@ -93,6 +95,7 @@ async function productList(req, res) {
       category:Category?.title,
       subcategory:subCategory?.title,
       subsubcategory:subsubCategory?.title,
+      status:data[i]?.status,
     })
   }
   return res.status(200).json({
@@ -138,6 +141,7 @@ if(req.body.type=="Image"){
     Resolution:req.body.Resolution,
     Annotation:req.body.Annotation,
    type:req.body.type,
+   languageTitle:req.body.languageTitle,
     image: image,
   })}
   else if(req.body.type=="Audio"){
@@ -163,6 +167,7 @@ if(req.body.type=="Image"){
       Channel:req.body.Channel,
       AudioFileDuration:req.body.AudioFileDuration,
       type:req.body.type,
+      languageTitle:req.body.languageTitle,
       image: image,
     })
   }
@@ -186,6 +191,7 @@ if(req.body.type=="Image"){
       Format:req.body.Format,
       Annotation:req.body.Annotation,
       type:req.body.type,
+      languageTitle:req.body.languageTitle,
       image: image,
     })
   }
@@ -205,11 +211,18 @@ if(req.body.type=="Image"){
     }
   });
 }
+async function productByIdforupdate(req, res) {
 
+  const data = await product.findOne({ _id: req.body.id })
+
+  return res.status(200).json({
+    data:data
+  })
+}
 // product by id
 async function productById(req, res) {
   console.log("productById", req.body)
-  if (__dirname == "/jinni/backend/jinni/controllers") {
+  if (__dirname == "/macgence/backend/macgence/controllers") {
     var PicUrl = `${process.env.URL}/uploads/product/`;
   } else {
     var PicUrl =
@@ -312,21 +325,83 @@ async function productUpdate(req, res) {
   } else {
     var image = req.body.image;
   }
-
-  await product.updateOne({ _id: req.body.id },
-    {
+  if(req.body.type=="Image"){
+    var productData = {
       title: req.body.title,
-      url: req.body.url,
+      shortDescription: req.body.shortDescription,
+      description: req.body.description,
+      uses: req.body.uses,
       category: req.body.category,
-      short_discription: req.body.shortDiscription,
-      discription: req.body.discription,
-      features: req.body.features,
-      pricing_category: req.body.pricingCategory,
-      price: req.body.price,
-      association: req.body.association,
+      subcategory: req.body.subcategory,
+      subsubcategory: req.body.subsubcategory,
+      TotalVolume: req.body.TotalVolume,
+      categorybyproduct: req.body.categorybyproduct,
+      Demographic:req.body.Demographic,
+      Countries:req.body.Countries,
+      Volume:req.body.Volume,
+      AgeGroups:req.body.AgeGroups,
+      Enviorment:req.body.Enviorment,
+      Format:req.body.Format,
+      Resolution:req.body.Resolution,
+      Annotation:req.body.Annotation,
+     type:req.body.type,
+     languageTitle:req.body.languageTitle,
       image: image,
-      updated_at: new Date()
-    }, function (err, result) {
+    }}
+    else if(req.body.type=="Audio"){
+      var productData = {
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        description: req.body.description,
+        uses: req.body.uses,
+        category: req.body.category,
+        subcategory: req.body.subcategory,
+        subsubcategory: req.body.subsubcategory,
+        TotalVolume: req.body.TotalVolume,
+        categorybyproduct: req.body.categorybyproduct,
+        language:req.body.language,
+        Country:req.body.Country,
+        Dilacts:req.body.Dilacts,
+        Genderdistribution:req.body.Genderdistribution,
+        AgeGroups:req.body.AgeGroups,
+        Enviorment:req.body.Enviorment,
+        BitDepth:req.body.BitDepth,
+        Format:req.body.Format,
+        SampleRate:req.body.SampleRate,
+        Channel:req.body.Channel,
+        AudioFileDuration:req.body.AudioFileDuration,
+        type:req.body.type,
+        languageTitle:req.body.languageTitle,
+        image: image,
+      }
+    }
+    else if(req.body.type=="Text"){
+      var productData = { 
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        description: req.body.description,
+        uses: req.body.uses,
+        category: req.body.category,
+        subcategory: req.body.subcategory,
+        subsubcategory: req.body.subsubcategory,
+        TotalVolume: req.body.TotalVolume,
+        categorybyproduct: req.body.categorybyproduct,
+        DatasetType:req.body.DatasetType,
+        Volume:req.body.Volume,
+        MediaType:req.body.MediaType,
+        LanguagePain:req.body.LanguagePain,
+        Type:req.body.Type,
+        WordCount:req.body.WordCount,
+        Format:req.body.Format,
+        Annotation:req.body.Annotation,
+        type:req.body.type,
+        languageTitle:req.body.languageTitle,
+        image: image,
+      }
+    }
+  await product.updateOne({ _id: req.body.id },
+    productData
+    , function (err, result) {
       if (result) {
         return res.status(200).json({
           message: "success",
@@ -349,6 +424,28 @@ async function productStatusUpdate(req, res) {
   await db.Product.updateOne({ _id: req.body.id },
     {
       verified: "verifieds",
+    }, function (err, result) {
+      if (result) {
+        return res.status(200).json({
+          message: "success",
+          status: "1",
+        });
+      } else {
+        return res.status(200).json({
+          message: "Error",
+          status: "0",
+        });
+      }
+    }
+  )
+}
+// productStatusUpdate
+async function productDelete(req, res) {
+  console.log("productDelete", req.body)
+
+  await db.Product.updateOne({ _id: req.body.id },
+    {
+      status: "Inactive",
     }, function (err, result) {
       if (result) {
         return res.status(200).json({
@@ -774,7 +871,7 @@ async function subsubcategoryDelete(req, res) {
 async function categorybyproductList(req, res) {
   console.log("categoryList", req.body)
 
-  const data = await categorybyProduct.find({}).sort({ _id: -1 });
+  const data = await categorybyProduct.find({state:"Active"}).sort({ _id: -1 });
   var list = []
   for(let i=0;data.length>i;++i){
     var productlength = await product.find({category:data[i].id})
@@ -862,7 +959,7 @@ async function categorybyproductDelete(req, res) {
 
   await db.Categorybyproduct.updateOne({ _id: req.body.id },
     {
-      status: "Inactive",
+      state: "Inactive",
     }, function (err, result) {
       if (result) {
         return res.status(200).json({
@@ -1006,7 +1103,7 @@ async function datasetDelete(req, res) {
 
   await db.Dataset.updateOne({ _id: req.body.id },
     {
-      status: "Inactive",
+      state: "Inactive",
     }, function (err, result) {
       if (result) {
         return res.status(200).json({

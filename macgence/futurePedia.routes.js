@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
-const {uploadPhoto} = require('../futurePedia/middleware/uploadPhoto');
-const {UploadAudio} = require('../futurePedia/middleware/uploadAudio')
-const adminController = require("../futurePedia/controllers/Admin.controller");
-const userController = require("../futurePedia/controllers/User.controller")
+const {uploadPhoto} = require('../macgence/middleware/uploadPhoto');
+const {UploadAudio} = require('../macgence/middleware/uploadAudio')
+const adminController = require("../macgence/controllers/Admin.controller");
+const userController = require("../macgence/controllers/User.controller")
 // ------ADMIN----------
 
 
@@ -20,6 +20,8 @@ router.get("/productList",productList);
 router.post("/productById",productById);
 router.post("/productUpdate",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),productUpdate);
 router.post("/productStatusUpdate",productStatusUpdate)
+router.post("/productDelete",productDelete)
+router.post("/productByIdforupdate",productByIdforupdate)
 // ----category--------
 router.post("/addcategory",addcategory);
 router.get("/addcategoryList",addcategoryList);
@@ -88,6 +90,7 @@ function userList(req, res,next){
     .catch((err) => next(err));
 }
 function addUser(req, res,next){
+  console.log("addUser",req.body)
   adminController
     .addUser(req, res)
     .then((data) => console.log("addUser"))
@@ -140,6 +143,18 @@ function productStatusUpdate(req, res,next){
   adminController
     .productStatusUpdate(req, res)
     .then((data) => console.log("productStatusUpdate"))
+    .catch((err) => next(err));
+}
+function productDelete(req, res,next){
+  adminController
+    .productDelete(req, res)
+    .then((data) => console.log("productDelete"))
+    .catch((err) => next(err));
+}
+function productByIdforupdate(req, res,next){
+  adminController
+    .productByIdforupdate(req, res)
+    .then((data) => console.log("productByIdforupdate"))
     .catch((err) => next(err));
 }
 

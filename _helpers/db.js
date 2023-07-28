@@ -18,13 +18,13 @@ try {
         process.exit(1)
     }
 module.exports = {
-    Product: require("../futurePedia/models/product.models"),
-    User: require("../futurePedia/models/user.model"),
-    Category: require("../futurePedia/models/category.models"),
-    subCategory: require("../futurePedia/models/subcategory.models"),
-    subsubCategory: require("../futurePedia/models/subsubcategory.models"),
-    Categorybyproduct: require("../futurePedia/models/categorybyProduct.models"),
-    Dataset: require("../futurePedia/models/dataset.models"),
+    Product: require("../macgence/models/product.models"),
+    User: require("../macgence/models/user.model"),
+    Category: require("../macgence/models/category.models"),
+    subCategory: require("../macgence/models/subcategory.models"),
+    subsubCategory: require("../macgence/models/subsubcategory.models"),
+    Categorybyproduct: require("../macgence/models/categorybyProduct.models"),
+    Dataset: require("../macgence/models/dataset.models"),
     
 
 };

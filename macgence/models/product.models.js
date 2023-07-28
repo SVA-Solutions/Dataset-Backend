@@ -40,6 +40,9 @@ const productSchema = new mongoose.Schema({
   language: {
     type: String,
   },
+  languageTitle: {
+    type: String,
+  },
   Country: {
     type: String,
   },
@@ -100,7 +103,7 @@ const productSchema = new mongoose.Schema({
   WordCount: {
     type: String,
   },
-  status:{type:String},
+  status:{ type: String,enum:["Active","Inactive"],default:"Active"},
   createdAt: {
     type: Date,
     default: new Date(),

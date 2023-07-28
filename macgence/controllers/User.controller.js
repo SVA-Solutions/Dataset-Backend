@@ -28,13 +28,14 @@ module.exports = {
 
 async function Homepage(req, res) {
     console.log("Homepage", req.body)
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    console.log*("__dirname",__dirname)
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
             "http://" + req.get("host") + "/uploads/product/";
     }
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
@@ -97,13 +98,13 @@ async function Homepage(req, res) {
 }
 async function filter(req, res) {
     console.log(req.body )
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
             "http://" + req.get("host") + "/uploads/product/";
     }
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
@@ -207,13 +208,13 @@ async function filter(req, res) {
     })
 }
 async function regexapi(req, res) {
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
             "http://" + req.get("host") + "/uploads/product/";
     }
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/category/`;
     } else {
         var categoryurl =
@@ -269,14 +270,14 @@ async function regexapi(req, res) {
 }
 async function productDetailPage(req,res){
     console.log(req.body)
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
             "http://" + req.get("host") + "/uploads/product/";
     }
    
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var datasetUrl = `${process.env.URL}/uploads/upload/`;
     } else {
         var datasetUrl =
@@ -369,7 +370,7 @@ async function emailfordatabase(req, res) {
     const email_number = req.body.email;
     var dataset = await db.Dataset.find({productId:req.body.productId})
     console.log("dataset",dataset)
-    if (__dirname == "/jinni/backend/jinni/controllers") {
+    if (__dirname == "/macgence/backend/macgence/controllers") {
         var datasetUrl = `${process.env.URL}/uploads/upload/`;
     } else {
         var datasetUrl =

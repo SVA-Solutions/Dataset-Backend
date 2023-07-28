@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const categorybyproductSchema = new mongoose.Schema({
   Category:{type: Array},
+  state:{ type: String,enum:["Active","Inactive"],default:"Active"},
   title: {
     type: String,
     required: true,

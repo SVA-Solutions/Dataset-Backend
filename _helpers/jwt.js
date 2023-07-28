@@ -1,6 +1,6 @@
 const expressJwt = require('express-jwt');
 const config = require('config.json');
-const userService = require('../futurePedia/controllers/Admin.controller');
+const userService = require('../macgence/controllers/Admin.controller');
 module.exports = jwt;
 
 function jwt() {
@@ -43,6 +43,11 @@ function jwt() {
             '/macgini/userUpdate',
             '/macgini/userDelete',
             '/macgini/login',
+            '/macgini/productStatusUpdate',
+            '/macgini/productDelete',
+            '/macgini/productById',
+            '/macgini/productByIdforupdate',
+            '/macgini/productUpdate',
         
         ]
     });

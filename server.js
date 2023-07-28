@@ -28,7 +28,7 @@ app.use(jwt());
 
 
 // api routes
-app.use('/macgini', require('./futurePedia/futurePedia.routes'));
+app.use('/macgini', require('./macgence/futurePedia.routes'));
 
 // global error handler
 app.use(errorHandler);
