@@ -103,7 +103,7 @@ async function filter(req, res) {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-            "http://" + req.get("host") + "/uploads/product/";
+            "http://" + "dataapi.macgence.com" + "/uploads/product/";
     }
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
@@ -132,13 +132,18 @@ async function filter(req, res) {
     for (let j = 0; categorybyProductlist.length > j; ++j) {
         const param1 = req.body.category
         const param2 = req.body.subsubcategory
+        console.log("param2",param2)
          var query;
-        if (param1 && param2) {
-            query = { category: param1, subsubcategory: { $in: param2 } ,  categorybyproduct: categorybyProductlist[j]._id };
-        } else if (param1 && param2 == []) {
+         if (param1 && param2 ) {
+            
             query = { category: param1, categorybyproduct: categorybyProductlist[j]._id };
-        } else if (param2) {
+        }else if (param2 == []) {
+           
             query = { subsubcategory: { $in: param2 }, categorybyproduct: categorybyProductlist[j]._id };
+        }
+        else if (param1 && param2 == []) {
+           
+            query = { category: param1, subsubcategory: { $in: param2 } ,  categorybyproduct: categorybyProductlist[j]._id };
         }
         console.log("query",query)
         const productlist = await product.find(query)
@@ -155,6 +160,7 @@ async function filter(req, res) {
                 subsubcategory: productlist[d].subsubcategory,
                 categorybyproduct: productlist[d].categorybyproduct,
                 Volume: productlist[d].Volume,
+                id: productlist[d]._id,
                 AudioFileDuration: productlist[d].AudioFileDuration,
                 image: PicUrl + productlist[d].image,
             })
@@ -193,6 +199,7 @@ async function filter(req, res) {
                 subsubcategory: productlist4[d].subsubcategory,
                 categorybyproduct: productlist4[d].categorybyproduct,
                 Volume: productlist[d].Volume,
+                id: productlist[d]._id,
                 AudioFileDuration: productlist[d].AudioFileDuration,
                 image: PicUrl + productlist4[d].image,
             })
@@ -213,7 +220,7 @@ async function regexapi(req, res) {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-            "http://" + req.get("host") + "/uploads/product/";
+            "http://" +"dataapi.macgence.com" + "/uploads/product/";
     }
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/category/`;
@@ -250,6 +257,7 @@ async function regexapi(req, res) {
                 uses: productlist[d].uses,
                 category: productlist[d].category,
                 subcategory: productlist[d].subcategory,
+                id: productlist[d]._id,
                 subsubcategory: productlist[d].subsubcategory,
                 categorybyproduct: productlist[d].categorybyproduct,
                 image: PicUrl + productlist[d].image,
