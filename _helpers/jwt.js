@@ -48,6 +48,13 @@ function jwt() {
             '/macgini/productById',
             '/macgini/productByIdforupdate',
             '/macgini/productUpdate',
+            '/macgini/ViewMore',
+            '/macgini/bannerList',
+            '/macgini/addBanner',
+            '/macgini/bannerById',
+            '/macgini/bannerUpdate',
+            '/macgini/bannerDelete',
+
         
         ]
     });

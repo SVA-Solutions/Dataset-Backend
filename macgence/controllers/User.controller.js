@@ -17,6 +17,7 @@ const User = db.User
 
 
 module.exports = {
+    ViewMore,
     Homepage,
     filter,
     regexapi,
@@ -26,6 +27,78 @@ module.exports = {
 }
 
 
+async function ViewMore(req, res) {
+    console.log("ViewMore", req.body)
+    console.log*("__dirname",__dirname)
+    if (__dirname == "/macgence/backend/macgence/controllers") {
+        var PicUrl = `${process.env.URL}/uploads/product/`;
+    } else {
+        var PicUrl =
+        "http://" + "dataapi.macgence.com" + "/uploads/product/";
+       
+    }
+    if (__dirname == "/macgence/backend/macgence/controllers") {
+        var categoryurl = `${process.env.URL}/uploads/subcategory/`;
+    } else {
+        var categoryurl =
+            "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
+    }
+    const categorylist = await category.find({});
+
+    var subarraylist = []
+    const subcategorylist = await subcategory.find({ category: { $in: req.body.id } });
+    console.log("subcategorylist", subcategorylist)
+    for (let j = 0; subcategorylist.length > j; ++j) {
+        console.log("subsubcategorylist1", subcategorylist[j]._id)
+        const subsubcategorylist = await subsubcategory.find({ subCategory: subcategorylist[j]._id  ,Category: { $in: req.body.id } });
+
+        subarraylist.push({
+            id: subcategorylist[j].id,
+            title: subcategorylist[j].title,
+            image: categoryurl + subcategorylist[j].image,
+            data: subsubcategorylist
+        })
+    }
+    
+    const productlistarray = []
+   
+        var productlist = await product.find({})
+        var list = []
+        for (let d = 0; productlist.length > d; ++d) {
+            const dataset = await db.Dataset.find({productId:productlist[d]._id})
+            list.push({
+                title: productlist[d].title,
+                id: productlist[d]._id,
+                shortDescription: productlist[d].shortDescription,
+                description: productlist[d].description,
+                uses: productlist[d].uses,
+                category: productlist[d].category,
+                subcategory: productlist[d].subcategory,
+                subsubcategory: productlist[d].subsubcategory,
+                categorybyproduct: productlist[d].categorybyproduct,
+                TotalVolume: productlist[d].TotalVolume,
+                Volume: productlist[d].Volume,
+                AudioFileDuration: productlist[d].AudioFileDuration,
+                image: PicUrl + productlist[d].image,
+                dataset:dataset
+            })
+        }
+        productlistarray.push({
+            title: "",
+            data: list
+        })
+      
+    
+    var productlistcount = await product.find({})
+    return res.status(200).json({
+        filter: subarraylist,
+        categorylist: categorylist,
+        productlist: productlistarray,
+        count:productlistcount.length,
+        messgae: "success",
+        status: "1"
+    })
+}
 async function Homepage(req, res) {
     console.log("Homepage", req.body)
     console.log*("__dirname",__dirname)
@@ -223,10 +296,10 @@ async function regexapi(req, res) {
             "http://" +"dataapi.macgence.com" + "/uploads/product/";
     }
     if (__dirname == "/macgence/backend/macgence/controllers") {
-        var categoryurl = `${process.env.URL}/uploads/category/`;
+        var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
-        "http://" + "dataapi.macgence.com" + "/uploads/category/";
+        "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
     const categorylist = await category.find({});
 

@@ -25,6 +25,7 @@ module.exports = {
     subsubCategory: require("../macgence/models/subsubcategory.models"),
     Categorybyproduct: require("../macgence/models/categorybyProduct.models"),
     Dataset: require("../macgence/models/dataset.models"),
+    Banner: require("../macgence/models/banner.models"),
     
 
 };

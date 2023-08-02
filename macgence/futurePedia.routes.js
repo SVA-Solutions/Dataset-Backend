@@ -54,14 +54,22 @@ router.post("/categorybyproductDelete",  categorybyproductDelete)
 router.get("/datasetList",datasetList);
 router.post("/adddataset",uploadPhoto("upload",[{ name: "image", maxCount: 1 }]),adddataset);
 router.post("/adddataset/audio",UploadAudio("upload",[{ name: "image", maxCount: 1 }]),adddataset);
-router.post("/adddataset/Text",adddataset);
+router.post("/adddataset",adddataset);
 router.post("/datasetById",datasetById);
 router.post("/datasetUpdate",datasetUpdate);
 router.post("/datasetDelete",  datasetDelete)
 
+// ----subsubcategory--------
+router.get("/bannerList",bannerList);
+router.post("/addBanner",uploadPhoto("banner",[{ name: "image", maxCount: 1 }]),addBanner);
+router.post("/bannerById",bannerById);
+router.post("/bannerUpdate",UploadAudio("banner",[{ name: "image", maxCount: 1 }]),bannerUpdate);
+router.post("/bannerDelete",  bannerDelete)
 
 
 
+
+router.post("/ViewMore",ViewMore)
 router.post("/home",Homepage)
 router.post("/filter",filter)
 router.post("/regexapi",regexapi)
@@ -350,10 +358,51 @@ function datasetDelete(req, res,next){
 }
 
 
+// ----Banner--------
+
+function bannerList(req, res,next){
+  adminController
+    .bannerList(req, res)
+    .then((data) => console.log("bannerList"))
+    .catch((err) => next(err));
+}
+function addBanner(req, res,next){
+  adminController
+    .addBanner(req, res)
+    .then((data) => console.log("addBanner"))
+    .catch((err) => next(err));
+}
+function bannerById(req, res,next){
+  adminController
+    .bannerById(req, res)
+    .then((data) => console.log("bannerById"))
+    .catch((err) => next(err));
+  }
+
+function bannerUpdate(req, res,next){
+  adminController
+    .bannerUpdate(req, res)
+    .then((data) => console.log("bannerUpdate"))
+    .catch((err) => next(err));
+}
+function bannerDelete(req, res,next){
+  adminController
+    .bannerDelete(req, res)
+    .then((data) => console.log("bannerDelete"))
+    .catch((err) => next(err));
+}
 
 
 
 
+
+
+function ViewMore(req, res,next){
+  userController
+    .ViewMore(req, res)
+    .then((data) => console.log("ViewMore"))
+    .catch((err) => next(err));
+}
 function Homepage(req, res,next){
   userController
     .Homepage(req, res)
