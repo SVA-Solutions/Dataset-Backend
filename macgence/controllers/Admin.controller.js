@@ -206,13 +206,13 @@ async function addproduct(req, res) {
   db.Product.create(productData, async function (err, result) {
     if (result) {
       return res.status(200).json({
-        message: "success",
+        message: "successfully product add",
         status: "1",
       });
     } else {
       console.log("err", err)
       res.status(200).json({
-        message: "error",
+        message: "error in adding product ",
         status: "0",
       });
     }
@@ -435,7 +435,7 @@ async function productStatusUpdate(req, res) {
     }, function (err, result) {
       if (result) {
         return res.status(200).json({
-          message: "success",
+          message: "successfully",
           status: "1",
         });
       } else {
@@ -457,7 +457,7 @@ async function productDelete(req, res) {
     }, function (err, result) {
       if (result) {
         return res.status(200).json({
-          message: "success",
+          message: "successfully product deleted",
           status: "1",
         });
       } else {
@@ -507,7 +507,7 @@ async function addcategory(req, res) {
   db.Category.create(categoryData, async function (err, result) {
     if (result) {
       return res.status(200).json({
-        message: "success",
+        message: "successfully category added",
         status: "1",
       });
     } else {
@@ -1301,7 +1301,7 @@ async function addBanner(req, res) {
   db.Banner.create(Bannerdata, async function (err, result) {
     if (result) {
       return res.status(200).json({
-        message: "success",
+        message: "successfully Banner Added",
         status: "1",
       });
     } else {
@@ -1372,7 +1372,7 @@ async function bannerDelete(req, res) {
     }, function (err, result) {
       if (result) {
         return res.status(200).json({
-          message: "success",
+          message: "Successfully deleted Banner",
           status: "1",
         });
       } else {
