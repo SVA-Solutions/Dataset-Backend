@@ -26,6 +26,7 @@ module.exports = {
     Categorybyproduct: require("../macgence/models/categorybyProduct.models"),
     Dataset: require("../macgence/models/dataset.models"),
     Banner: require("../macgence/models/banner.models"),
+    Email:require("../macgence/models/email.models")
     
 
 };

@@ -14,6 +14,7 @@ const feature = db.Feature
 const pricing = db.Pricing
 const blog = db.Blog
 const banner = db.Banner
+const Email = db.Email
 
 module.exports = {
 
@@ -71,6 +72,8 @@ module.exports = {
   bannerById,
   addBanner,
   bannerList,
+
+  email
 
 }
 
@@ -1385,3 +1388,15 @@ async function bannerDelete(req, res) {
   )
 }
 
+
+async function email(req, res) {
+  console.log("categoryList", req.body)
+
+  const data = await Email.find({ status: "Active" }).sort({ _id: -1 });
+
+  return res.status(200).json({
+    data: data,
+    messgae: "success",
+    status: "1"
+  })
+}

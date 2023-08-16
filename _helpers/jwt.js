@@ -54,6 +54,7 @@ function jwt() {
             '/macgini/bannerById',
             '/macgini/bannerUpdate',
             '/macgini/bannerDelete',
+            '/macgini/email',
 
         
         ]

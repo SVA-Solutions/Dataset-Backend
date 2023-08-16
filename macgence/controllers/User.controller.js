@@ -14,6 +14,7 @@ const subcategory = db.subCategory
 const subsubcategory = db.subsubCategory
 const categorybyProduct = db.Categorybyproduct
 const User = db.User
+const Email = db.Email
 
 
 module.exports = {
@@ -34,7 +35,7 @@ async function ViewMore(req, res) {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-        "http://" + "dataapi.macgence.com" + "/uploads/product/";
+        process.env.cloudnary_Image_Url;
        
     }
     if (__dirname == "/macgence/backend/macgence/controllers") {
@@ -100,15 +101,8 @@ async function ViewMore(req, res) {
     })
 }
 async function Homepage(req, res) {
-    console.log("Homepage", req.body)
-    console.log*("__dirname",__dirname)
-    if (__dirname == "/macgence/backend/macgence/controllers") {
-        var PicUrl = `${process.env.URL}/uploads/product/`;
-    } else {
         var PicUrl =
-        "http://" + "dataapi.macgence.com" + "/uploads/product/";
-       
-    }
+        process.env.cloudnary_Image_Url;
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
@@ -119,11 +113,8 @@ async function Homepage(req, res) {
 
     var subarraylist = []
     const subcategorylist = await subcategory.find({ category: { $in: req.body.id } });
-    console.log("subcategorylist", subcategorylist)
     for (let j = 0; subcategorylist.length > j; ++j) {
-        console.log("subsubcategorylist1", subcategorylist[j]._id)
         const subsubcategorylist = await subsubcategory.find({ subCategory: subcategorylist[j]._id  ,Category: { $in: req.body.id } });
-
         subarraylist.push({
             id: subcategorylist[j].id,
             title: subcategorylist[j].title,
@@ -176,7 +167,7 @@ async function filter(req, res) {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-            "http://" + "dataapi.macgence.com" + "/uploads/product/";
+        process.env.cloudnary_Image_Url;
     }
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
@@ -293,7 +284,7 @@ async function regexapi(req, res) {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-            "http://" +"dataapi.macgence.com" + "/uploads/product/";
+        process.env.cloudnary_Image_Url;
     }
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
@@ -356,7 +347,7 @@ async function productDetailPage(req,res){
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
         var PicUrl =
-        "http://" + "dataapi.macgence.com" + "/uploads/product/";
+        process.env.cloudnary_Image_Url;
     }
    
     if (__dirname == "/macgence/backend/macgence/controllers") {
@@ -458,6 +449,28 @@ async function emailfordatabase(req, res) {
         var datasetUrl =
         "http://" + "dataapi.macgence.com" + "/uploads/upload/";
     }
+
+    const categoryData = new Email({
+        name: req.body.name,
+        email: req.body.email,
+        company: req.body.company,
+      });
+    
+      db.Email.create(categoryData, async function (err, result) {
+        if (result) {
+          return res.status(200).json({
+            message: "successfully category added",
+            status: "1",
+          });
+        } else {
+          console.log("err", err)
+          res.status(200).json({
+            message: "error",
+            status: "0",
+          });
+        }
+      });
+
     mailOptions = {
       from: "aditya.sharma@indiaresults.com",
       to: req.body.email,

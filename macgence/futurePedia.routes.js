@@ -1,10 +1,41 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
-const {uploadPhoto} = require('../macgence/middleware/uploadPhoto');
+
 const {UploadAudio} = require('../macgence/middleware/uploadAudio')
 const adminController = require("../macgence/controllers/Admin.controller");
 const userController = require("../macgence/controllers/User.controller")
+
+var multer = require('multer')
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+cloudinary.config({
+    cloud_name: process.env.cloudinary_name,
+    api_key: process.env.cloudinary_key,
+    api_secret: process.env.cloudinary_api_secrate
+  });
+  
+  // Multer configuration
+  const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'image-uploads', // Cloudinary folder where images will be stored
+      allowedFormats: ['jpg', 'jpeg', 'png']
+    }
+  });
+  const uploadPhoto = (folderName, fields) => {
+    const upload = multer({ storage: storage }).fields(fields);
+    return (req, res, next) => {
+      upload(req, res, err => {
+        if (err) {
+          return res.status(400).json({ message: 'Image upload failed.' });
+        }
+        next();
+      });
+    };
+  };
+
 // ------ADMIN----------
 
 
@@ -30,7 +61,7 @@ router.post("/categoryById",categoryById);
 router.post("/categoryUpdate",categoryUpdate);
 router.post("/categoryDelete",  categoryDelete)
 // ----subcategory--------
-router.post("/addsubcategory",uploadPhoto("subcategory", [{ name: "image", maxCount: 1 }]),addsubcategory);
+router.post("/addsubcategory",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),addsubcategory);
 router.post("/subcategoryListbid",subcategoryListbid);
 router.get("/subcategoryList",subcategoryList);
 router.post("/addsubcategoryList",addsubcategoryList);
@@ -52,7 +83,7 @@ router.post("/categorybyproductUpdate",categorybyproductUpdate);
 router.post("/categorybyproductDelete",  categorybyproductDelete)
 // ----subsubcategory--------
 router.get("/datasetList",datasetList);
-router.post("/adddataset",uploadPhoto("upload",[{ name: "image", maxCount: 1 }]),adddataset);
+router.post("/adddataset",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),adddataset);
 router.post("/adddataset/audio",UploadAudio("upload",[{ name: "image", maxCount: 1 }]),adddataset);
 router.post("/adddataset",adddataset);
 router.post("/datasetById",datasetById);
@@ -61,7 +92,7 @@ router.post("/datasetDelete",  datasetDelete)
 
 // ----subsubcategory--------
 router.get("/bannerList",bannerList);
-router.post("/addBanner",uploadPhoto("banner",[{ name: "image", maxCount: 1 }]),addBanner);
+router.post("/addBanner",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),addBanner);
 router.post("/bannerById",bannerById);
 router.post("/bannerUpdate",UploadAudio("banner",[{ name: "image", maxCount: 1 }]),bannerUpdate);
 router.post("/bannerDelete",  bannerDelete)
@@ -76,6 +107,7 @@ router.post("/regexapi",regexapi)
 router.post("/productDetailPage",productDetailPage)
 router.post("/emailfordatabase",emailfordatabase)
 router.post("/login",login)
+router.get("/email",email)
 
 module.exports = router;
 
@@ -438,6 +470,12 @@ function login(req, res,next){
   userController
     .login(req, res)
     .then((data) => console.log("login"))
+    .catch((err) => next(err));
+}
+function email(req, res,next){
+  adminController
+    .email(req, res)
+    .then((data) => console.log("email"))
     .catch((err) => next(err));
 }
 
