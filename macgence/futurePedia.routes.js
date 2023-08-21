@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
-
+const{uploadPhoto} = require('../macgence/middleware/uploadPhoto')
 const {UploadAudio} = require('../macgence/middleware/uploadAudio')
 const adminController = require("../macgence/controllers/Admin.controller");
 const userController = require("../macgence/controllers/User.controller")
@@ -24,7 +24,7 @@ cloudinary.config({
       allowedFormats: ['jpg', 'jpeg', 'png']
     }
   });
-  const uploadPhoto = (folderName, fields) => {
+  const uploadPhotosss = (folderName, fields) => {
     const upload = multer({ storage: storage }).fields(fields);
     return (req, res, next) => {
       upload(req, res, err => {
@@ -46,10 +46,10 @@ router.post("/userById",userById);
 router.post("/userUpdate",userUpdate);
 router.post("/userDelete",userDelete)
 // ----product--------
-router.post("/addproduct",uploadPhoto("product", [{ name: "image", maxCount: 1 }]), addproduct);
+router.post("/addproduct",uploadPhotosss("product", [{ name: "image", maxCount: 1 }]), addproduct);
 router.get("/productList",productList);
 router.post("/productById",productById);
-router.post("/productUpdate",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),productUpdate);
+router.post("/productUpdate",uploadPhotosss("product", [{ name: "image", maxCount: 1 }]),productUpdate);
 router.post("/productStatusUpdate",productStatusUpdate)
 router.post("/productDelete",productDelete)
 router.post("/productByIdforupdate",productByIdforupdate)
@@ -83,11 +83,11 @@ router.post("/categorybyproductUpdate",categorybyproductUpdate);
 router.post("/categorybyproductDelete",  categorybyproductDelete)
 // ----subsubcategory--------
 router.get("/datasetList",datasetList);
-router.post("/adddataset",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),adddataset);
+router.post("/adddataset",uploadPhotosss("product", [{ name: "image", maxCount: 1 }]),adddataset);
 router.post("/adddataset/audio",UploadAudio("upload",[{ name: "image", maxCount: 1 }]),adddataset);
 router.post("/adddataset",adddataset);
 router.post("/datasetById",datasetById);
-router.post("/datasetUpdate",datasetUpdate);
+router.post("/datasetUpdate",uploadPhotosss("product", [{ name: "image", maxCount: 1 }]),datasetUpdate);
 router.post("/datasetDelete",  datasetDelete)
 
 // ----subsubcategory--------

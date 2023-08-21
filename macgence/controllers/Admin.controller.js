@@ -232,90 +232,12 @@ async function productByIdforupdate(req, res) {
 // product by id
 async function productById(req, res) {
   console.log("productById", req.body)
-  if (__dirname == "/macgence/backend/macgence/controllers") {
-    var PicUrl = `${process.env.URL}/uploads/product/`;
-  } else {
-    var PicUrl =
-      "http://" + "dataapi.macgence.com" + "/uploads/product/";
-  }
-  const data = await product.findOne({ _id: req.body.id })
-  const features = await feature.findOne({ _id: data.features })
-  const categoryTitle = await category.findOne({ _id: data.category })
-  const price = await pricing.findOne({ _id: data.pricing_category })
-  console.log("feature", features.title)
-  if (req.body.user_id != undefined) {
-    console.log()
-    var heartStatus1 = ""
-    const favourites1 = await db.Favourites.findOne({ user_id: req.body.user_id, product_id: data.id })
-    if (favourites1 == null) {
-      heartStatus1 = "0"
-    } else {
-      heartStatus1 = favourites1.heart_status
-    }
-  }
-  const productData = {
-    title: data.title,
-    url: data.url,
-    category: categoryTitle.title,
-    heartStatus: heartStatus1,
-    short_discription: data.short_discription,
-    discription: data.discription,
-    features: features.title,
-    pricing_category: price.title,
-    price: data.price,
-    association: data.association,
-    created_at: data.created_at,
-    id: data._id,
-    image: PicUrl + data.image,
-    dataset: data.dataset?.map((item) => { return (PicUrl + item) }),
-  };
-  const categorybyproduct = await product.find({ category: data.category })
-  var simmilarproduct = []
-  for (let i = 0; categorybyproduct.length > i; ++i) {
-    if (req.body.user_id != undefined) {
-      console.log()
-      var heartStatus = ""
-      const favourites = await db.Favourites.findOne({ user_id: req.body.user_id, product_id: categorybyproduct[i].id })
-      if (favourites == null) {
-        heartStatus = "0"
-      } else {
-        heartStatus = favourites.heart_status
-      }
-    }
-    simmilarproduct.push({
-      title: categorybyproduct[i].title,
-      url: categorybyproduct[i].url,
-      category: categoryTitle.title,
-      heartStatus: heartStatus,
-      short_discription: categorybyproduct[i].short_discription,
-      discription: categorybyproduct[i].discription,
-      features: features.title,
-      pricing_category: price.title,
-      price: categorybyproduct[i].price,
-      association: categorybyproduct[i].association,
-      id: categorybyproduct[i]._id,
-      image: PicUrl + categorybyproduct[i].image,
-      // image: categorybyproduct[i].image,
-    })
-  }
-  const CommentList = []
-  const comment = await db.Comment.find({ productId: req.body.id })
-  for (let i = 0; comment.length > i; ++i) {
-    const userTitle = await user.findOne({ _id: comment[i].userId })
 
-    CommentList.push({
-      ratting: comment[i].ratting,
-      comment: comment[i].comment,
-      productId: comment[i].productId,
-      userName: userTitle.full_name,
-      created_at: userTitle.created_at,
-    })
-  }
+  const data = await product.findOne({ _id: req.body.id })
+
   return res.status(200).json({
-    data: productData,
-    simmilarproduct: simmilarproduct,
-    commentList: CommentList,
-    comment: comment,
+    data: data,
+
     messgae: "success",
     status: "1"
   })
@@ -323,7 +245,33 @@ async function productById(req, res) {
 
 // product Update
 async function productUpdate(req, res) {
-  console.log("productUpdate", req.body)
+  var files = req.files;
+  if (files.image == "") {
+    return res.status(200).json({
+      message: "file require"
+    })
+  }
+  if (req.body.category == "") {
+    return res.status(200).json({
+      message: "sellect category"
+    })
+  }
+  if (req.body.subcategory == "") {
+    return res.status(200).json({
+      message: "sellect subcategory"
+    })
+  }
+  if (req.body.susubcategory == "") {
+    return res.status(200).json({
+      message: "sellect susubcategory"
+    })
+  }
+  if (req.body.categorybyproduct == "") {
+    return res.status(200).json({
+      message: "sellect categorybyproduct"
+    })
+  }
+  console.log("productUpdatetyrtyertyert", req.body)
 
   if (typeof files.image != "undefined") {
     var images = "";
@@ -335,6 +283,7 @@ async function productUpdate(req, res) {
   } else {
     var image = req.body.image;
   }
+  console.log("image", image)
   if (req.body.type == "Image") {
     var productData = {
       title: req.body.title,
@@ -882,14 +831,14 @@ async function subsubcategoryDelete(req, res) {
 async function categorybyproductList(req, res) {
   console.log("categoryList", req.body)
 
-  const data = await categorybyProduct.find({ state: "Active" }).sort({ _id: -1 });
+  const data = await categorybyProduct.find({ status: "Active" }).sort({ _id: -1 });
   var list = []
   for (let i = 0; data.length > i; ++i) {
     var productlength = await product.find({ category: data[i].id })
     list.push({
       title: data[i].title,
-      subCategory: data[i].subCategory,
-      image: data[i].image
+      subCategory: data[i].Category,
+  
     })
   }
 
@@ -997,14 +946,11 @@ async function datasetList(req, res) {
   const data = await db.Dataset.find({ state: "Active" }).sort({ _id: -1 });
   var list = []
   for (let i = 0; data.length > i; ++i) {
-
+    const Product = await db.Product.findOne({ _id: data[i].productId })
+    console.log("Product", data[i].productId)
     list.push({
-      Age: data[i].Age,
-      Gender: data[i].Gender,
-      Annotation: data[i].Annotation,
-      productId: data[i].productId,
+      productname: Product?.title,
       id: data[i]._id,
-      image: data[i].image
     })
   }
 
@@ -1088,26 +1034,93 @@ async function datasetById(req, res) {
 
 // dataset Update
 async function datasetUpdate(req, res) {
-  console.log("datasetUpdate", req.body)
-
-
-  await db.Dataset.updateOne({ _id: req.body.id },
-    {
-      title: req.body.title,
-    }, function (err, result) {
-      if (result) {
-        return res.status(200).json({
-          message: "success",
-          status: "1",
-        });
-      } else {
-        return res.status(200).json({
-          message: "Error",
-          status: "0",
-        });
+  console.log("datasetUpdatedfadfas", req.body)
+  var files = req.files;
+  if (typeof files != "undefined") {
+    if (typeof files.image != "undefined") {
+      var images = "";
+      for (var j = 0; j < files.image.length; j++) {
+        var image_name = files.image[j].filename;
+        images += image_name + ",";
+        var image = images.replace(/,\s*$/, "");
       }
     }
-  )
+  }
+  else {
+    var image = req.body.image;
+  }
+  if (req.body.type == "Image") {
+    console.log("dfasdfasdfsadfa")
+    await db.Dataset.updateOne({ _id: req.body.id },
+      {
+        productId: req.body.productId,
+        Age: req.body.age,
+        Gender: req.body.gender,
+        Annotation: req.body.Annotation,
+        image: image
+      }, function (err, result) {
+        if (result) {
+          return res.status(200).json({
+            message: "success",
+            status: "1",
+          });
+        } else {
+          return res.status(200).json({
+            message: "Error",
+            status: "0",
+          });
+        }
+      })
+  }
+  if (req.body.type == "Text") {
+    await db.Dataset.updateOne({ _id: req.body.id },
+      {
+        productId: req.body.productId,
+        English: req.body.English,
+        Language: req.body.Language,
+      }, function (err, result) {
+        if (result) {
+          return res.status(200).json({
+            message: "success",
+            status: "1",
+          });
+        } else {
+          return res.status(200).json({
+            message: "Error",
+            status: "0",
+          });
+        }
+      }
+    )
+  }
+  else if (req.body.type == "Audio") {
+    await db.Dataset.updateOne({ _id: req.body.id },
+      {
+        productId: req.body.productId,
+        channel1: req.body.channel1,
+        channel2: req.body.channel2,
+        Format: req.body.Format,
+        image: image
+      }, function (err, result) {
+        if (result) {
+          return res.status(200).json({
+            message: "success",
+            status: "1",
+          });
+        } else {
+          return res.status(200).json({
+            message: "Error",
+            status: "0",
+          });
+        }
+      }
+    )
+  }
+  return res.status(200).json({
+    message: "Error",
+    status: "0",
+  });
+
 }
 
 // dataset Delete
@@ -1264,7 +1277,7 @@ async function bannerList(req, res) {
       "http://" + "dataapi.macgence.com" + "/uploads/banner/";
 
   }
-  const data = await banner.find({state:"Active"}).sort({ _id: -1 });
+  const data = await banner.find({ state: "Active" }).sort({ _id: -1 });
   var array = []
   for (let i = 0; data.length > i; i++) {
     array.push({

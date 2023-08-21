@@ -55,6 +55,9 @@ function jwt() {
             '/macgini/bannerUpdate',
             '/macgini/bannerDelete',
             '/macgini/email',
+            '/macgini/datasetById',
+            '/macgini/datasetUpdate',
+            '/macgini/subsubcategoryUpdate',
 
         
         ]
