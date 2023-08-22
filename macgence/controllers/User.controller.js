@@ -497,7 +497,7 @@ async function emailfordatabase(req, res) {
           <p>macgence.com</p>
           <a  href="mailto:info@macgence.com?cc=secondemail@example.com &bcc=lastemail@example.com&subject=Mail from our Website&body=macgence Team"  style="color: #666;"  target="_blank" > info@macgence.ae  </a>
           </div>
-          <a  href=${datasetUrl+dataset[0].image}  style="color: #666;"  target="_blank" > Click Here To Download  </a>
+          <a  href=${datasetUrl+dataset[0]?.image}  style="color: #666;"  target="_blank" > Click Here To Download  </a>
       </div>
     </div>`,
     };
