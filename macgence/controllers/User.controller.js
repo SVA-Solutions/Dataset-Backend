@@ -413,7 +413,7 @@ async function productDetailPage(req,res){
         image: PicUrl + productlist.image,
         dataset:datasetlist,
     }
-    var similarproductlist = await product.find({type:productlist.type})
+    var similarproductlist = await product.find({type:productlist.type}).limit(4)
     var similarlist = []
     for (let j = 0; similarproductlist.length > j; ++j) {
             similarlist.push({
