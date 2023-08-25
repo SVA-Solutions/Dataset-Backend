@@ -86,7 +86,7 @@ module.exports = {
 //  productList 
 async function productList(req, res) {
   const list = []
-  const data = await product.find({state:"Active"}).sort({ _id: -1 });
+  const data = await product.find({status:"Active"}).sort({ _id: -1 });
   console.log("data", data)
   for (let i = 0; data.length > i; ++i) {
 

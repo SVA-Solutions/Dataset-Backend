@@ -342,7 +342,7 @@ async function regexapi(req, res) {
     })
 }
 async function productDetailPage(req,res){
-    console.log(req.body)
+    console.log("product",req.body)
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
@@ -454,20 +454,17 @@ async function emailfordatabase(req, res) {
         name: req.body.name,
         email: req.body.email,
         company: req.body.company,
+        phonenumber: req.body.phonenumber,
+        message: req.body.message,
+        productId:req.body.productid
       });
     
       db.Email.create(categoryData, async function (err, result) {
         if (result) {
-          return res.status(200).json({
-            message: "successfully category added",
-            status: "1",
-          });
+            console.log("succesfull")
         } else {
           console.log("err", err)
-          res.status(200).json({
-            message: "error",
-            status: "0",
-          });
+          
         }
       });
 
