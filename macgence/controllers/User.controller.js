@@ -7,7 +7,6 @@ const Pricing = require("twilio/lib/rest/Pricing");
 const { Category, Dataset } = require("../../_helpers/db");
 var nodemailer = require("nodemailer");
 var smtpTransports = require("nodemailer-smtp-transport");
-var moment = require("moment");
 const product = db.Product
 const category = db.Category
 const subcategory = db.subCategory
@@ -101,6 +100,7 @@ async function ViewMore(req, res) {
     })
 }
 async function Homepage(req, res) {
+
         var PicUrl =
         process.env.cloudnary_Image_Url;
     if (__dirname == "/macgence/backend/macgence/controllers") {
@@ -133,6 +133,7 @@ async function Homepage(req, res) {
                 title: productlist[d].title,
                 id: productlist[d]._id,
                 shortDescription: productlist[d].shortDescription,
+                slug: productlist[d].slug,
                 description: productlist[d].description,
                 uses: productlist[d].uses,
                 category: productlist[d].category,
@@ -342,7 +343,7 @@ async function regexapi(req, res) {
     })
 }
 async function productDetailPage(req,res){
-    console.log("product",req.body)
+ 
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
@@ -358,9 +359,10 @@ async function productDetailPage(req,res){
     }
 
 
-    var productlist = await product.findOne({_id:req.body.id})
+    var productlist = await product.findOne({slug:req.body.id})
     var datasetlist = []
-    var dataset = await db.Dataset.find({productId:req.body.id})
+    var dataset = await db.Dataset.find({productId:productlist._id})
+    
     for (let d = 0; dataset.length > d; ++d) {
         datasetlist.push({
             productId:dataset[d].productId,
@@ -372,10 +374,10 @@ async function productDetailPage(req,res){
             English:dataset[d].English,
             Language:dataset[d].Language,
             Format:dataset[d].Format,
-            image:datasetUrl+dataset[d].image
+            image:PicUrl+dataset[d].image
         });
     }
-    console.log("dataset",dataset)
+  
     var categorydata = await db.Category.findOne({_id:productlist.category})
     const list = {
         title: productlist.title,
@@ -419,6 +421,7 @@ async function productDetailPage(req,res){
             similarlist.push({
                 title: similarproductlist[j].title,
                 id: similarproductlist[j]._id,
+                slug: similarproductlist[j].slug,
                 shortDescription: similarproductlist[j].shortDescription,
                 description: similarproductlist[j].description,
                 uses: similarproductlist[j].uses,
@@ -570,6 +573,7 @@ async function login(req, res) {
                             full_name: Users?.full_name,
                             email: Users?.email,
                             role: Users?.role_id,
+                            token: Users?.token,
                             created_at: Users?.created_at,
                             id: Users?._id,
                         };

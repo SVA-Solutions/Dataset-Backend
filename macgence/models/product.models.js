@@ -4,6 +4,9 @@ const productSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  slug: {
+    type: String,
+  },
   shortDescription: {
     type: String,
   },

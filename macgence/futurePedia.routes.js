@@ -29,7 +29,8 @@ cloudinary.config({
     return (req, res, next) => {
       upload(req, res, err => {
         if (err) {
-          return res.status(400).json({ message: 'Image upload failed.' });
+          console.log(err)
+          return res.status(400).json(err);
         }
         next();
       });
@@ -85,7 +86,7 @@ router.post("/categorybyproductDelete",  categorybyproductDelete)
 router.get("/datasetList",datasetList);
 router.post("/adddataset",uploadPhotosss("product", [{ name: "image", maxCount: 1 }]),adddataset);
 router.post("/adddataset/audio",UploadAudio("upload",[{ name: "image", maxCount: 1 }]),adddataset);
-router.post("/adddataset",adddataset);
+// router.post("/adddataset",adddataset);
 router.post("/datasetById",datasetById);
 router.post("/datasetUpdate",uploadPhotosss("product", [{ name: "image", maxCount: 1 }]),datasetUpdate);
 router.post("/datasetDelete",  datasetDelete)

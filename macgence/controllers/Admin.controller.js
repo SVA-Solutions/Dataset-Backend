@@ -66,6 +66,7 @@ module.exports = {
   userById,
   userUpdate,
   userDelete,
+  getById,
 
   bannerDelete,
   bannerUpdate,
@@ -117,8 +118,6 @@ async function productList(req, res) {
 
 // Add product
 async function addproduct(req, res) {
-  console.log("addproduct", req.body)
-  console.log("addproduct", req.files)
   var files = req.files;
   if (typeof files.image != "undefined") {
     var images = "";
@@ -133,6 +132,7 @@ async function addproduct(req, res) {
   if (req.body.type == "Image") {
     var productData = new product({
       title: req.body.title,
+      slug: req.body.title.replace(/ /g, "_"),
       shortDescription: req.body.shortDescription,
       description: req.body.description,
       uses: req.body.uses,
@@ -963,8 +963,6 @@ async function datasetList(req, res) {
 
 // Add dataset
 async function adddataset(req, res) {
-  console.log("adddataset", req.body)
-  console.log("adddataset", req.files)
 
   var files = req.files;
   if (typeof files != "undefined") {
@@ -1011,7 +1009,7 @@ async function adddataset(req, res) {
       });
     } else {
       console.log("err", err)
-      res.status(200).json({
+      return res.status(200).json({
         message: "error",
         status: "0",
       });
@@ -1160,6 +1158,11 @@ async function userList(req, res) {
     messgae: "success",
     status: "1"
   })
+}
+
+//getbyid
+async function getById(id) {
+  return await user.findById(id);
 }
 
 // Add user
@@ -1413,3 +1416,5 @@ async function email(req, res) {
     status: "1"
   })
 }
+
+
