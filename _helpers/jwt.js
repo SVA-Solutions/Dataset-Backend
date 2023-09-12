@@ -8,9 +8,11 @@ function jwt() {
     return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
         path: [
             // public routes that don't require authenticationss
+           
             '/',
             '/macgini/addproduct',
             '/macgini/home',
+            '/macgini/bannerList',
             '/macgini/regexapi',
             '/macgini/filter',
             '/macgini/productDetailPage',          

@@ -34,7 +34,7 @@ app.use('/macgini', require('./macgence/futurePedia.routes'));
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('MACGINI')
 })
 
 
