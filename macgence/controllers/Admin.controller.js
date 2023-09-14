@@ -136,6 +136,8 @@ async function addproduct(req, res) {
       shortDescription: req.body.shortDescription,
       description: req.body.description,
       uses: req.body.uses,
+      metaTitle: req.body.metatitle,
+      metadescription: req.body.metadescription,
       category: req.body.category,
       subcategory: req.body.subcategory,
       subsubcategory: req.body.subsubcategory,

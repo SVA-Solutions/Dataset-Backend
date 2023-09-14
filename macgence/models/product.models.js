@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+  metaTitle: {
+    type: String,
+  },
+  metadescription: {
+    type: String,
+  },
   title: {
     type: String,
   },

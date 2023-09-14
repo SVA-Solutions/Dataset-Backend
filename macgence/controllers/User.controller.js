@@ -5,8 +5,11 @@ const bcrypt = require("bcryptjs");
 const { productList } = require("./Admin.controller");
 const Pricing = require("twilio/lib/rest/Pricing");
 const { Category, Dataset } = require("../../_helpers/db");
+const fs = require('fs');
+const path = require('path');
 var nodemailer = require("nodemailer");
 var smtpTransports = require("nodemailer-smtp-transport");
+const xml = require('xmlbuilder');
 const product = db.Product
 const category = db.Category
 const subcategory = db.subCategory
@@ -23,7 +26,8 @@ module.exports = {
     regexapi,
     productDetailPage,
     emailfordatabase,
-    login
+    login,
+    creatxml
 }
 
 
@@ -135,7 +139,7 @@ async function Homepage(req, res) {
                 shortDescription: productlist[d].shortDescription,
                 slug: productlist[d].slug,
                 description: productlist[d].description,
-                uses: productlist[d].uses,
+                uses: productlist[d].uses.slice(0, 2),
                 category: productlist[d].category,
                 subcategory: productlist[d].subcategory,
                 subsubcategory: productlist[d].subsubcategory,
@@ -219,7 +223,7 @@ async function filter(req, res) {
                 title: productlist[d].title,
                 shortDescription: productlist[d].shortDescription,
                 description: productlist[d].description,
-                uses: productlist[d].uses,
+                uses: productlist[d].uses.slice(0,2),
                 category: productlist[d].category,
                 subcategory: productlist[d].subcategory,
                 subsubcategory: productlist[d].subsubcategory,
@@ -319,7 +323,7 @@ async function regexapi(req, res) {
                 title: productlist[d].title,
                 shortDescription: productlist[d].shortDescription,
                 description: productlist[d].description,
-                uses: productlist[d].uses,
+                uses: productlist[d].uses.slice(0,2),
                 category: productlist[d].category,
                 subcategory: productlist[d].subcategory,
                 id: productlist[d]._id,
@@ -369,6 +373,7 @@ async function productDetailPage(req,res){
             Age:dataset[d].Age,
             Gender:dataset[d].Gender,
             Annotation:dataset[d].Annotation,
+
             channel1:dataset[d].channel1,
             channel2:dataset[d].channel2,
             English:dataset[d].English,
@@ -387,6 +392,8 @@ async function productDetailPage(req,res){
         uses: productlist.uses,
         TotalVolume: categorydata?.TotalVolume,
         type: productlist?.type,
+        metaTitle: productlist?.metaTitle,
+        metadescription: productlist?.metadescription,
         category: categorydata.title,
         subcategory: productlist.subcategory,
         subsubcategory: productlist.subsubcategory,
@@ -596,4 +603,38 @@ async function login(req, res) {
         }
     }
 
+}
+
+async function creatxml(req,res){
+    // try {
+        const products = await product.find();
+        const xmlData = xml.create({ urlset: { '@xmlns': 'http://www.sitemaps.org/schemas/sitemap/0.9' } });
+    
+        for (const product of products) {
+          xmlData.ele('url')
+            .ele('loc', `https://data.macgence.com/dataset/${product.slug}`)
+            .up()
+            .ele('lastmod', product.createdAt)
+            .up()
+            .up();
+        }
+    
+        const xmlString = xmlData.end({ pretty: true });
+    
+        // Specify the folder and filename for storing the XML file
+        const folderPath = path.join(__dirname, 'xml-files'); // Change 'xml-files' to your desired folder name
+        const filename = 'products.xml';
+    
+        // Ensure the folder exists, or create it if necessary
+        if (!fs.existsSync(folderPath)) {
+          fs.mkdirSync(folderPath);
+        }
+    
+        // Write the XML data to the file
+        fs.writeFileSync(path.join(folderPath, filename), xmlString);
+    
+        res.status(200).json({ message: 'XML file created and stored successfully' });
+    //   } catch (error) {
+    //     res.status(500).json({ error: 'Failed to generate and store XML file' });
+    //   }
 }
