@@ -93,7 +93,7 @@ router.post("/datasetDelete",  datasetDelete)
 
 // ----subsubcategory--------
 router.get("/bannerList",bannerList);
-router.post("/addBanner",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),addBanner);
+router.post("/addBanner",uploadPhoto("banner", [{ name: "image", maxCount: 1 }]),addBanner);
 router.post("/bannerById",bannerById);
 router.post("/bannerUpdate",UploadAudio("banner",[{ name: "image", maxCount: 1 }]),bannerUpdate);
 router.post("/bannerDelete",  bannerDelete)
@@ -109,6 +109,7 @@ router.post("/productDetailPage",productDetailPage)
 router.post("/emailfordatabase",emailfordatabase)
 router.post("/login",login)
 router.get("/email",email)
+router.get("/createxml",creatxml)
 
 module.exports = router;
 
@@ -471,6 +472,12 @@ function login(req, res,next){
   userController
     .login(req, res)
     .then((data) => console.log("login"))
+    .catch((err) => next(err));
+}
+function creatxml(req, res,next){
+  userController
+    .creatxml(req, res)
+    .then((data) => console.log("createxml"))
     .catch((err) => next(err));
 }
 function email(req, res,next){
