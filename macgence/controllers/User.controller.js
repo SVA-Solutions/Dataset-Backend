@@ -77,6 +77,7 @@ async function ViewMore(req, res) {
                 description: productlist[d].description,
                 uses: productlist[d].uses,
                 category: productlist[d].category,
+                slug: productlist[d].slug, slug: productlist[d].slug,
                 subcategory: productlist[d].subcategory,
                 subsubcategory: productlist[d].subsubcategory,
                 categorybyproduct: productlist[d].categorybyproduct,
@@ -201,13 +202,10 @@ async function filter(req, res) {
     for (let j = 0; categorybyProductlist.length > j; ++j) {
         const param1 = req.body.category
         const param2 = req.body.subsubcategory
-        console.log("param2",param2)
          var query;
          if (param1 && param2 ) {
-            
             query = { category: param1, categorybyproduct: categorybyProductlist[j]._id };
         }else if (param2 == []) {
-           
             query = { subsubcategory: { $in: param2 }, categorybyproduct: categorybyProductlist[j]._id };
         }
         else if (param1 && param2 == []) {
@@ -216,22 +214,24 @@ async function filter(req, res) {
         }
         console.log("query",query)
         const productlist = await product.find(query)
+        console.log("productlistingasdefned",productlist )
         const list = []
-        console.log("productlist",productlist)
-        for (let d = 0; productlist.length > d; ++d) {
+        
+        for (let d = 0; productlist?.length > d; ++d) {
             list.push({
-                title: productlist[d].title,
-                shortDescription: productlist[d].shortDescription,
-                description: productlist[d].description,
-                uses: productlist[d].uses.slice(0,2),
-                category: productlist[d].category,
-                subcategory: productlist[d].subcategory,
-                subsubcategory: productlist[d].subsubcategory,
-                categorybyproduct: productlist[d].categorybyproduct,
-                Volume: productlist[d].Volume,
-                id: productlist[d]._id,
-                AudioFileDuration: productlist[d].AudioFileDuration,
-                image: PicUrl + productlist[d].image,
+                title: productlist[d]?.title,
+                shortDescription: productlist[d]?.shortDescription,
+                description:productlist[d]?.description,
+                uses:productlist[d]?.uses.slice(0,2),
+                slug: productlist[d].slug,
+                category:productlist[d]?.category,
+                subcategory:productlist[d]?.subcategory,
+                subsubcategory:productlist[d]?.subsubcategory,
+                categorybyproduct:productlist[d]?.categorybyproduct,
+                Volume:productlist[d]?.Volume,
+                id:productlist[d]?._id,
+                AudioFileDuration:productlist[d]?.AudioFileDuration,
+                image: PicUrl +productlist[d]?.image,
             })
         }
         productlistarray.push({
@@ -255,7 +255,6 @@ async function filter(req, res) {
         console.log("query",query)
         const productlist4 = await product.find(query)
         const list4 = []
-        console.log("productlist",productlist4)
         for (let d = 0; productlist4.length > d; ++d) {
             list4.push({
                 title: productlist4[d].title,
@@ -267,9 +266,9 @@ async function filter(req, res) {
                 subcategory: productlist4[d].subcategory,
                 subsubcategory: productlist4[d].subsubcategory,
                 categorybyproduct: productlist4[d].categorybyproduct,
-                Volume: productlist[d].Volume,
-                id: productlist[d]._id,
-                AudioFileDuration: productlist[d].AudioFileDuration,
+                Volume: productlist4[d].Volume,
+                id: productlist4[d]._id,
+                AudioFileDuration: productlist4[d].AudioFileDuration,
                 image: PicUrl + productlist4[d].image,
             })
         }
@@ -324,6 +323,7 @@ async function regexapi(req, res) {
                 shortDescription: productlist[d].shortDescription,
                 description: productlist[d].description,
                 uses: productlist[d].uses.slice(0,2),
+                slug: productlist[d].slug, slug: productlist[d].slug,
                 category: productlist[d].category,
                 subcategory: productlist[d].subcategory,
                 id: productlist[d]._id,
