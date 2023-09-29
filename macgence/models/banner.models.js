@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const datasetSchema = new mongoose.Schema({
   title:{type:String},
+  description:{type:String},
   image:{type:String},
   state:{ type: String,enum:["Active","Inactive"],default:"Active"},
   createdAt: {
