@@ -1287,6 +1287,7 @@ async function bannerList(req, res) {
   for (let i = 0; data.length > i; i++) {
     array.push({
       title: data[i].title,
+      description: data[i].description,
       id: data[i]._id,
       image: PicUrl + data[i].image
     })
@@ -1316,6 +1317,7 @@ async function addBanner(req, res) {
 
   const Bannerdata = new banner({
     title: req.body.title,
+    description:req.body.description,
     image: image
   });
 
@@ -1364,6 +1366,7 @@ async function bannerUpdate(req, res) {
   await banner.updateOne({ _id: req.body.id },
     {
       title: req.body.title,
+      description:req.body.description,
       image: image,
       updated_at: new Date()
     }, function (err, result) {
