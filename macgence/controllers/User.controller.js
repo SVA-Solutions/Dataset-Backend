@@ -149,7 +149,7 @@ async function Homepage(req, res) {
                 TotalVolume: productlist[d].TotalVolume,
                 Volume: productlist[d].Volume,
                 AudioFileDuration: productlist[d].AudioFileDuration,
-                image: PicUrl + productlist[d].image,
+                // image: PicUrl + productlist[d].image,
                 dataset:dataset
             })
         }
@@ -455,10 +455,10 @@ async function emailfordatabase(req, res) {
     var dataset = await db.Dataset.find({productId:req.body.productId})
     console.log("dataset",dataset)
     if (__dirname == "/macgence/backend/macgence/controllers") {
-        var datasetUrl = `${process.env.URL}/uploads/upload/`;
+        var datasetUrl = process.env.cloudnary_Image_Url;
     } else {
         var datasetUrl =
-        "http://" + "dataapi.macgence.com" + "/uploads/upload/";
+        process.env.cloudnary_Image_Url
     }
 
     const categoryData = new Email({
@@ -508,16 +508,16 @@ async function emailfordatabase(req, res) {
           <a  href=${datasetUrl+dataset[0]?.image}  style="color: #666;"  target="_blank" > Click Here To Download  </a>
       </div>
      </div>`,
-    // attachments: [
-    //   {
-    //     // File path or URL to the attachment
-    //     path: datasetUrl + dataset[0]?.image,
-    //     // Optional: Content type for the attachment
-    //     // contentType: 'application/pdf', // or 'image/png', 'text/plain', etc.
-    //     // Optional: Custom filename for the attachment
-    //     // filename: 'custom_filename.pdf',
-    //   },
-    // ],
+    attachments: [
+      {
+        // File path or URL to the attachment
+        path: datasetUrl + dataset[0]?.image,
+        // Optional: Content type for the attachment
+        // contentType: 'application/pdf', // or 'image/png', 'text/plain', etc.
+        // Optional: Custom filename for the attachment
+        // filename: 'custom_filename.pdf',
+      },
+    ],
     };
     
     
@@ -530,7 +530,7 @@ async function emailfordatabase(req, res) {
           auth: {
             user: "aditya.sharma@indiaresults.com",
             pass: "Admin@2023",
-          },
+        },
         })
       );
       smtpTransportss.sendMail(mailOptions, function (error, response) {
