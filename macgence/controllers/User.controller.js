@@ -507,17 +507,17 @@ async function emailfordatabase(req, res) {
           </div>
           <a  href=${datasetUrl+dataset[0]?.image}  style="color: #666;"  target="_blank" > Click Here To Download  </a>
       </div>
-    </div>`,
-    attachments: [
-      {
-        // File path or URL to the attachment
-        path: datasetUrl + dataset[0]?.image,
-        // Optional: Content type for the attachment
-        // contentType: 'application/pdf', // or 'image/png', 'text/plain', etc.
-        // Optional: Custom filename for the attachment
-        // filename: 'custom_filename.pdf',
-      },
-    ],
+     </div>`,
+    // attachments: [
+    //   {
+    //     // File path or URL to the attachment
+    //     path: datasetUrl + dataset[0]?.image,
+    //     // Optional: Content type for the attachment
+    //     // contentType: 'application/pdf', // or 'image/png', 'text/plain', etc.
+    //     // Optional: Custom filename for the attachment
+    //     // filename: 'custom_filename.pdf',
+    //   },
+    // ],
     };
     
     
