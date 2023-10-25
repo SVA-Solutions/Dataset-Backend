@@ -123,6 +123,7 @@ async function Homepage(req, res) {
         subarraylist.push({
             id: subcategorylist[j].id,
             title: subcategorylist[j].title,
+            
             image: categoryurl + subcategorylist[j].image,
             data: subsubcategorylist
         })
@@ -479,9 +480,9 @@ async function emailfordatabase(req, res) {
       });
 
     mailOptions = {
-      from: "aditya.sharma@indiaresults.com",
+      from: "donotreply@macgence.com",
       to: req.body.email,
-      subject: "Verification Code",
+      subject: "Sample Document",
       html: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
       <div style="margin:50px auto;width:70%;padding:20px 0">
         <div style="border-bottom:1px solid #eee">
@@ -512,13 +513,12 @@ async function emailfordatabase(req, res) {
     
       var smtpTransportss = nodemailer.createTransport(
         smtpTransports({
-          service: "gmail",
-          host: "smtp.gmail.com",
+          host: "macgence.com",
           port: 465,
           secure: true,
           auth: {
-            user: "aditya.sharma@indiaresults.com",
-            pass: "Admin@1234",
+            user: "donotreply@macgence.com",
+            pass: "%b<CndG<8SB&4dT*",
           },
         })
       );
