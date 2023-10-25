@@ -480,9 +480,9 @@ async function emailfordatabase(req, res) {
       });
 
     mailOptions = {
-      from: "donotreply@macgence.com",
+      from: "aditya.sharma@indiaresults.com",
       to: req.body.email,
-      subject: "Sample Document",
+      subject: "Sample Data",
       html: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
       <div style="margin:50px auto;width:70%;padding:20px 0">
         <div style="border-bottom:1px solid #eee">
@@ -508,17 +508,28 @@ async function emailfordatabase(req, res) {
           <a  href=${datasetUrl+dataset[0]?.image}  style="color: #666;"  target="_blank" > Click Here To Download  </a>
       </div>
     </div>`,
+    attachments: [
+      {
+        // File path or URL to the attachment
+        path: datasetUrl + dataset[0]?.image,
+        // Optional: Content type for the attachment
+        // contentType: 'application/pdf', // or 'image/png', 'text/plain', etc.
+        // Optional: Custom filename for the attachment
+        // filename: 'custom_filename.pdf',
+      },
+    ],
     };
     
     
       var smtpTransportss = nodemailer.createTransport(
         smtpTransports({
-          host: "macgence.com",
+          service: "gmail",
+          host: "smtp.gmail.com",
           port: 465,
           secure: true,
           auth: {
-            user: "donotreply@macgence.com",
-            pass: "%b<CndG<8SB&4dT*",
+            user: "aditya.sharma@indiaresults.com",
+            pass: "Admin@2023",
           },
         })
       );
