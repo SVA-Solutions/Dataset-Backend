@@ -149,7 +149,7 @@ async function Homepage(req, res) {
                 TotalVolume: productlist[d].TotalVolume,
                 Volume: productlist[d].Volume,
                 AudioFileDuration: productlist[d].AudioFileDuration,
-                // image: PicUrl + productlist[d].image,
+                image: PicUrl + productlist[d].image,
                 dataset:dataset
             })
         }
