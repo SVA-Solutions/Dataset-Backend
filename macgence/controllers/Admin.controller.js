@@ -116,34 +116,152 @@ async function productList(req, res) {
 }
 
 
-// Add product
-async function addproduct(req, res) {
-  var files = req.files;
-  if (typeof files.image != "undefined") {
-    var images = "";
-    for (var j = 0; j < files.image.length; j++) {
-      var image_name = files.image[j].filename;
-      images += image_name + ",";
-      var image = images.replace(/,\s*$/, "");
+// // Add product
+// async function addproduct(req, res) {
+//   var files = req.files;
+//   if (typeof files.image != "undefined") {
+//     var images = "";
+//     for (var j = 0; j < files.image.length; j++) {
+//       var image_name = files.image[j].filename;
+//       images += image_name + ",";
+//       var image = images.replace(/,\s*$/, "");
+//     }
+//   } else {
+//     var image = req.body.dataset;
+//   }
+//   if (req.body.type == "Image") {
+//     var productData = new product({
+//       title: req.body.title,
+//       slug: req.body.title.replace(/ /g, "_"),
+//       shortDescription: req.body.shortDescription,
+//       description: req.body.description,
+//       uses: req.body.uses,
+//       metaTitle: req.body.metatitle,
+//       metadescription: req.body.metadescription,
+//       category: req.body.category,
+//       subcategory: req.body.subcategory,
+//       subsubcategory: req.body.subsubcategory,
+//       TotalVolume: req.body.TotalVolume,
+//       categorybyproduct: req.body.categorybyproduct,
+//       Demographic: req.body.Demographic,
+//       Countries: req.body.Countries,
+//       Volume: req.body.Volume,
+//       AgeGroups: req.body.AgeGroups,
+//       Enviorment: req.body.Enviorment,
+//       Format: req.body.Format,
+//       Resolution: req.body.Resolution,
+//       Annotation: req.body.Annotation,
+//       type: req.body.type,
+//       languageTitle: req.body.languageTitle,
+//       image: image,
+//     })
+//   }
+//   else if (req.body.type == "Audio") {
+//     var productData = new product({
+//       title: req.body.title,
+//       slug: req.body.title.replace(/ /g, "_"),
+//       shortDescription: req.body.shortDescription,
+//       description: req.body.description,
+//       uses: req.body.uses,
+//       category: req.body.category,
+//       subcategory: req.body.subcategory,
+//       subsubcategory: req.body.subsubcategory,
+//       metaTitle: req.body.metatitle,
+//       metadescription: req.body.metadescription,
+//       TotalVolume: req.body.TotalVolume,
+//       categorybyproduct: req.body.categorybyproduct,
+//       language: req.body.language,
+//       Country: req.body.Country,
+//       Dilacts: req.body.Dilacts,
+//       Genderdistribution: req.body.Genderdistribution,
+//       AgeGroups: req.body.AgeGroups,
+//       Enviorment: req.body.Enviorment,
+//       BitDepth: req.body.BitDepth,
+//       Format: req.body.Format,
+//       SampleRate: req.body.SampleRate,
+//       Channel: req.body.Channel,
+//       AudioFileDuration: req.body.AudioFileDuration,
+//       type: req.body.type,
+//       languageTitle: req.body.languageTitle,
+//       image: image,
+//     })
+//   }
+//   else if (req.body.type == "Text") {
+//     var productData = new product({
+//       title: req.body.title,
+//       slug: req.body.title.replace(/ /g, "_"),
+//       shortDescription: req.body.shortDescription,
+//       description: req.body.description,
+//       uses: req.body.uses,
+//       category: req.body.category,
+//       subcategory: req.body.subcategory,
+//       metaTitle: req.body.metatitle,
+//       metadescription: req.body.metadescription,
+//       subsubcategory: req.body.subsubcategory,
+//       TotalVolume: req.body.TotalVolume,
+//       categorybyproduct: req.body.categorybyproduct,
+//       DatasetType: req.body.DatasetType,
+//       Volume: req.body.Volume,
+//       MediaType: req.body.MediaType,
+//       LanguagePain: req.body.LanguagePain,
+//       Type: req.body.Type,
+//       WordCount: req.body.WordCount,
+//       Format: req.body.Format,
+//       Annotation: req.body.Annotation,
+//       type: req.body.type,
+//       languageTitle: req.body.languageTitle,
+//       image: image,
+//     })
+//   }
+
+//   db.Product.create(productData, async function (err, result) {
+//     if (result) {
+//       return res.status(200).json({
+//         message: "successfully product add",
+//         status: "1",
+//       });
+//     } else {
+//       console.log("err", err)
+//       res.status(200).json({
+//         message: "error in adding product ",
+//         status: "0",
+//       });
+//     }
+//   });
+// }
+
+async function addproduct  (req, res)  {
+  try {
+    const { title, shortDescription,metaTitle,metadescription, description, uses, category, subcategory, subsubcategory, TotalVolume, categorybyproduct, type, languageTitle } = req.body;
+    let image = "";
+
+    if (req.files && req.files.image) {
+      image = req.files.image.map(file => file.filename).join(",");
+    } else if (type === "Text") {
+      image = req.body.dataset;
     }
-  } else {
-    var image = req.body.dataset;
-  }
-  if (req.body.type == "Image") {
-    var productData = new product({
-      title: req.body.title,
-      slug: req.body.title.replace(/ /g, "_"),
-      shortDescription: req.body.shortDescription,
-      description: req.body.description,
-      uses: req.body.uses,
-      metaTitle: req.body.metatitle,
-      metadescription: req.body.metadescription,
-      category: req.body.category,
-      subcategory: req.body.subcategory,
-      subsubcategory: req.body.subsubcategory,
-      TotalVolume: req.body.TotalVolume,
-      categorybyproduct: req.body.categorybyproduct,
-      Demographic: req.body.Demographic,
+
+    let productData = {
+      title,
+      slug: title.replace(/ /g, "_"),
+      shortDescription,
+      description,
+      uses,
+      category,
+      subcategory,
+      subsubcategory,
+      TotalVolume,
+      categorybyproduct,
+      type,
+      image,
+      metadescription,
+      metaTitle
+    };
+
+    if (type === "Image") {
+      productData = {
+        ...productData,
+        Demographic: req.body.Demographic,
       Countries: req.body.Countries,
       Volume: req.body.Volume,
       AgeGroups: req.body.AgeGroups,
@@ -151,23 +269,12 @@ async function addproduct(req, res) {
       Format: req.body.Format,
       Resolution: req.body.Resolution,
       Annotation: req.body.Annotation,
-      type: req.body.type,
-      languageTitle: req.body.languageTitle,
-      image: image,
-    })
-  }
-  else if (req.body.type == "Audio") {
-    var productData = new product({
-      title: req.body.title,
-      shortDescription: req.body.shortDescription,
-      description: req.body.description,
-      uses: req.body.uses,
-      category: req.body.category,
-      subcategory: req.body.subcategory,
-      subsubcategory: req.body.subsubcategory,
-      TotalVolume: req.body.TotalVolume,
-      categorybyproduct: req.body.categorybyproduct,
-      language: req.body.language,
+      languageTitle: req.body.languageTitle
+      };
+    } else if (type === "Audio") {
+      productData = {
+        ...productData,
+        language: req.body.language,
       Country: req.body.Country,
       Dilacts: req.body.Dilacts,
       Genderdistribution: req.body.Genderdistribution,
@@ -178,51 +285,44 @@ async function addproduct(req, res) {
       SampleRate: req.body.SampleRate,
       Channel: req.body.Channel,
       AudioFileDuration: req.body.AudioFileDuration,
-      type: req.body.type,
       languageTitle: req.body.languageTitle,
-      image: image,
-    })
-  }
-  else if (req.body.type == "Text") {
-    var productData = new product({
-      title: req.body.title,
-      shortDescription: req.body.shortDescription,
-      description: req.body.description,
-      uses: req.body.uses,
-      category: req.body.category,
-      subcategory: req.body.subcategory,
-      subsubcategory: req.body.subsubcategory,
-      TotalVolume: req.body.TotalVolume,
-      categorybyproduct: req.body.categorybyproduct,
-      DatasetType: req.body.DatasetType,
-      Volume: req.body.Volume,
-      MediaType: req.body.MediaType,
-      LanguagePain: req.body.LanguagePain,
-      Type: req.body.Type,
-      WordCount: req.body.WordCount,
-      Format: req.body.Format,
-      Annotation: req.body.Annotation,
-      type: req.body.type,
-      languageTitle: req.body.languageTitle,
-      image: image,
-    })
-  }
+      };
+    } else if (type === "Text") {
+      productData = {
+        ...productData,
+        DatasetType: req.body.DatasetType,
+        Volume: req.body.Volume,
+        MediaType: req.body.MediaType,
+        LanguagePain: req.body.LanguagePain,
+        Type: req.body.Type,
+        WordCount: req.body.WordCount,
+        Format: req.body.Format,
+        Annotation: req.body.Annotation,
+  
+        languageTitle: req.body.languageTitle,
+      };
+    }
 
-  db.Product.create(productData, async function (err, result) {
+    const result = await db.Product.create(productData);
+
     if (result) {
       return res.status(200).json({
-        message: "successfully product add",
+        message: "Successfully added product",
         status: "1",
       });
     } else {
-      console.log("err", err)
-      res.status(200).json({
-        message: "error in adding product ",
-        status: "0",
-      });
+      throw new Error("Failed to add product");
     }
-  });
-}
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
+      message: "Error in adding product",
+      status: "0",
+    });
+  }
+};
+
+
 async function productByIdforupdate(req, res) {
 
   const data = await product.findOne({ _id: req.body.id })
@@ -556,9 +656,10 @@ async function subcategoryList(req, res) {
   const data = await subcategory.find({ status: "Active" }).sort({ _id: -1 });
   var list = []
   for (let i = 0; data.length > i; ++i) {
-    var categorydetail = await db.Category.find({ _id: data[i].subCategory })
+    var categorydetail = await db.Category.find({ _id: data[i].category })
     list.push({
       title: data[i].title,
+      category: categorydetail.map((e)=>{return( {id:e._id,name:e.title})}),
       subCategorytitle: categorydetail.title,
       subCategory: data[i].subCategory,
       image: data[i].image
@@ -707,16 +808,21 @@ async function subcategoryDelete(req, res) {
 
 //  subsubCategoryList 
 async function subsubcategoryList(req, res) {
-  console.log("categoryList", req.body)
+  console.log("subsubcategoryList", req.body)
 
   const data = await subsubcategory.find({ status: "Active" }).sort({ _id: -1 });
   var list = []
+
   for (let i = 0; data.length > i; ++i) {
+ 
+    var categorydetail = await db.Category.find({ _id: data[i].Category })
     var productlength = await product.find({ category: data[i].id })
     list.push({
       title: data[i].title,
+      category: categorydetail.map((e)=>{return( {id:e._id,name:e.title})}),
       subCategory: data[i].subCategory,
-      image: data[i].image
+      image: data[i].image,
+      
     })
   }
 
@@ -836,11 +942,12 @@ async function categorybyproductList(req, res) {
   const data = await categorybyProduct.find({ status: "Active" }).sort({ _id: -1 });
   var list = []
   for (let i = 0; data.length > i; ++i) {
+    var categorydetail = await db.Category.find({ _id: data[i].Category })
     var productlength = await product.find({ category: data[i].id })
     list.push({
       title: data[i].title,
-      subCategory: data[i].Category,
-  
+      subCategory: categorydetail.map((e)=>{return( {id:e._id,name:e.title})}),
+     
     })
   }
 
