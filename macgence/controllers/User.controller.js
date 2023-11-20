@@ -524,7 +524,7 @@ async function emailfordatabase(req, res) {
     
     const smtpTransportss = nodemailer.createTransport(
         smtpTransports({
-            host: "macgence.com",
+            host: "data.macgence.com",
             port: 465, // Update the port if needed
             secure: true,
             auth: {
@@ -540,7 +540,7 @@ async function emailfordatabase(req, res) {
         } else {
           console.log("Mail sent");
           res.status(200).json({
-            message: "Check Your Mail for Verification Code.",
+            message: "Check Your Mail ",
             status: "1",
           });
         }
