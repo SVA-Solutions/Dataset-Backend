@@ -521,7 +521,7 @@ async function emailfordatabase(req, res) {
     ],
     };
     
-    
+    console.log("mailOptions", mailOptions)
     const smtpTransportss = nodemailer.createTransport(
         smtpTransports({
             host: "data.macgence.com",
@@ -533,6 +533,7 @@ async function emailfordatabase(req, res) {
             },
         })
     );
+    console.log("smtpTransportss", smtpTransportss)
       smtpTransportss.sendMail(mailOptions, function (error, response) {
         if (error) {
           console.log(error);
