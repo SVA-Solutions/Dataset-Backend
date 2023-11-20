@@ -522,7 +522,7 @@ async function emailfordatabase(req, res) {
     };
     
     
-    const smtpTransport = nodemailer.createTransport(
+    const smtpTransportss = nodemailer.createTransport(
         smtpTransports({
             host: "data.macgence.com",
             port: 465, // Update the port if needed
