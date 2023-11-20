@@ -521,18 +521,17 @@ async function emailfordatabase(req, res) {
     };
     
     
-      var smtpTransportss = nodemailer.createTransport(
+    const smtpTransport = nodemailer.createTransport(
         smtpTransports({
-          service: "gmail",
-          host: "smtp.gmail.com",
-          port: 465,
-          secure: true,
-          auth: {
-            user: "aditya.sharma@indiaresults.com",
-            pass: "Admin@2023",
-        },
+            host: "data.macgence.com",
+            port: 465, // Update the port if needed
+            secure: true,
+            auth: {
+                user: "Donoreply@macgence.com",
+                pass: "India143$#@",
+            },
         })
-      );
+    );
       smtpTransportss.sendMail(mailOptions, function (error, response) {
         if (error) {
           console.log(error);
