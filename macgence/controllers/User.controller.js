@@ -509,31 +509,31 @@ async function emailfordatabase(req, res) {
           <a  href=${datasetUrl+dataset[0]?.image}  style="color: #666;"  target="_blank" > Click Here To Download  </a>
       </div>
      </div>`,
-    attachments: [
-      {
-        // File path or URL to the attachment
-        path: datasetUrl + dataset[0]?.image,
-        // Optional: Content type for the attachment
-        // contentType: 'application/pdf', // or 'image/png', 'text/plain', etc.
-        // Optional: Custom filename for the attachment
-        // filename: 'custom_filename.pdf',
-      },
-    ],
+    // attachments: [
+    //   {
+    //     // File path or URL to the attachment
+    //     path: datasetUrl + dataset[0]?.image,
+    //     // Optional: Content type for the attachment
+    //     // contentType: 'application/pdf', // or 'image/png', 'text/plain', etc.
+    //     // Optional: Custom filename for the attachment
+    //     // filename: 'custom_filename.pdf',
+    //   },
+    // ],
     };
     
-    console.log("mailOptions", mailOptions)
+    
     const smtpTransportss = nodemailer.createTransport(
         smtpTransports({
-            host: "macgence.com",
-            port: 587, // Update the port if needed
+            host: "server1.secureclouddns.net",
+            port: 465, // Update the port if needed
             secure: true,
             auth: {
-                user: "Donoreply@macgence.com",
-                pass: "India143$#@",
+                user: "noreply@emails.macgence.com",
+                pass: "sdfsdH454dfhAKSDJR",
             },
         })
     );
-    console.log("smtpTransportss", smtpTransportss)
+
       smtpTransportss.sendMail(mailOptions, function (error, response) {
         if (error) {
           console.log(error);
