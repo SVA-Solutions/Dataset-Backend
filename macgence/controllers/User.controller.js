@@ -481,7 +481,7 @@ async function emailfordatabase(req, res) {
 
     mailOptions = {
       from: "noreply@emails.macgence.com",
-      cc:"admin@macgence.com",
+      cc:"info@macgence.com",
       to: req.body.email,
       subject: "Sample Data",
       html: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
