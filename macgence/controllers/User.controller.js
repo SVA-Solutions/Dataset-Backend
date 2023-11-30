@@ -114,7 +114,7 @@ async function Homepage(req, res) {
         var categoryurl =
             "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
-    const categorylist = await category.find({});
+    const categorylist = await category.find({ status:"Active"});
 
     var subarraylist = []
     const subcategorylist = await subcategory.find({ category: { $in: req.body.id } , status:"Active"});
@@ -123,12 +123,11 @@ async function Homepage(req, res) {
         subarraylist.push({
             id: subcategorylist[j].id,
             title: subcategorylist[j].title,
-            
             image: categoryurl + subcategorylist[j].image,
             data: subsubcategorylist
         })
     }
-    const categorybyProductlist = await categorybyProduct.find({})
+    const categorybyProductlist = await categorybyProduct.find({ status:"Active"})
     const productlistarray = []
     for (let j = 0; categorybyProductlist.length > j; ++j) {
         var productlist = await product.find({ categorybyproduct: categorybyProductlist[j]._id , status:"Active" })
