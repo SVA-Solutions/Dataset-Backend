@@ -659,6 +659,7 @@ async function subcategoryList(req, res) {
     var categorydetail = await db.Category.find({ _id: data[i].category })
     list.push({
       title: data[i].title,
+      id:data[i]._id,
       category: categorydetail.map((e)=>{return( {id:e._id,name:e.title})}),
       subCategorytitle: categorydetail.title,
       subCategory: data[i].subCategory,
@@ -819,6 +820,7 @@ async function subsubcategoryList(req, res) {
     var productlength = await product.find({ category: data[i].id })
     list.push({
       title: data[i].title,
+      id:data[i]._id,
       category: categorydetail.map((e)=>{return( {id:e._id,name:e.title})}),
       subCategory: data[i].subCategory,
       image: data[i].image,
@@ -946,6 +948,7 @@ async function categorybyproductList(req, res) {
     var productlength = await product.find({ category: data[i].id })
     list.push({
       title: data[i].title,
+      id:data[i]._id,
       subCategory: categorydetail.map((e)=>{return( {id:e._id,name:e.title})}),
      
     })
@@ -1028,7 +1031,7 @@ async function categorybyproductDelete(req, res) {
 
   await db.Categorybyproduct.updateOne({ _id: req.body.id },
     {
-      state: "Inactive",
+      status: "Inactive",
     }, function (err, result) {
       if (result) {
         return res.status(200).json({
