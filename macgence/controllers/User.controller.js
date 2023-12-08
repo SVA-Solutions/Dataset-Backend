@@ -184,11 +184,11 @@ async function filter(req, res) {
     const categorylist = await category.find({});
 
     var subarraylist = []
-    const subcategorylist = await subcategory.find({ category: { $in: req.body.id } });
+    const subcategorylist = await subcategory.find({ category: { $in: req.body.id } , status:"Active"});
     console.log("subcategorylist", subcategorylist)
     for (let j = 0; subcategorylist.length > j; ++j) {
         console.log("subsubcategorylist", subcategorylist[j]._id)
-        const subsubcategorylist = await subsubcategory.find({ subCategory: subcategorylist[j]._id ,Category: { $in: req.body.id }});
+        const subsubcategorylist = await subsubcategory.find({ subCategory: subcategorylist[j]._id ,Category: { $in: req.body.id } , status:"Active"});
 
         subarraylist.push({
             id: subcategorylist[j].id,
@@ -197,7 +197,7 @@ async function filter(req, res) {
             data: subsubcategorylist
         })
     }
-    const categorybyProductlist = await categorybyProduct.find({Category:{ $in: req.body.id }})
+    const categorybyProductlist = await categorybyProduct.find({Category:{ $in: req.body.id } , status:"Active"})
     const productlistarray = []
     for (let j = 0; categorybyProductlist.length > j; ++j) {
         const param1 = req.body.category
@@ -246,11 +246,11 @@ async function filter(req, res) {
         const param24 = req.body.subsubcategory
          var query;
         if (param14 && param24) {
-            query = { category: param14, subsubcategory: { $in: param24 }  };
+            query = { category: param14, subsubcategory: { $in: param24 } , status:"Active" };
         } else if (param14 && param24 == []) {
             query = { category: param14};
         } else if (param24) {
-            query = { subsubcategory: { $in: param24 }};
+            query = { subsubcategory: { $in: param24 } , status:"Active"};
         }
         console.log("query",query)
         const productlist4 = await product.find(query)
@@ -365,7 +365,7 @@ async function productDetailPage(req,res){
 
     var productlist = await product.findOne({slug:req.body.id})
     var datasetlist = []
-    var dataset = await db.Dataset.find({productId:productlist._id})
+    var dataset = await db.Dataset.find({productId:productlist._id , status:"Active"})
     
     for (let d = 0; dataset.length > d; ++d) {
         datasetlist.push({
@@ -383,7 +383,7 @@ async function productDetailPage(req,res){
         });
     }
   
-    var categorydata = await db.Category.findOne({_id:productlist.category})
+    var categorydata = await db.Category.findOne({_id:productlist.category , status:"Active"})
     const list = {
         title: productlist.title,
         id: productlist._id,
