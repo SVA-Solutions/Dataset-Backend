@@ -181,7 +181,7 @@ async function filter(req, res) {
         var categoryurl =
         "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
-    const categorylist = await category.find({});
+    const categorylist = await category.find({status:"Active"});
 
     var subarraylist = []
     const subcategorylist = await subcategory.find({ category: { $in: req.body.id } , status:"Active"});
