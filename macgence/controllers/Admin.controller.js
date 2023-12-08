@@ -1389,7 +1389,7 @@ async function bannerList(req, res) {
     var PicUrl = `${process.env.URL}/uploads/banner/`;
   } else {
     var PicUrl =
-      "http://" + "dataapi.macgence.com" + "/uploads/banner/";
+      "https://" + "dataapi.macgence.com" + "/uploads/banner/";
 
   }
   const data = await banner.find({ state: "Active" }).sort({ _id: -1 });

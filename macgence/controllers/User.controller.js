@@ -45,7 +45,7 @@ async function ViewMore(req, res) {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
-            "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
+            "https://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
     const categorylist = await category.find({});
 
@@ -112,7 +112,7 @@ async function Homepage(req, res) {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
-            "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
+            "https://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
     const categorylist = await category.find({ status:"Active"});
 
@@ -179,7 +179,7 @@ async function filter(req, res) {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
-        "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
+        "https://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
     const categorylist = await category.find({status:"Active"});
 
@@ -294,7 +294,7 @@ async function regexapi(req, res) {
         var categoryurl = `${process.env.URL}/uploads/subcategory/`;
     } else {
         var categoryurl =
-        "http://" + "dataapi.macgence.com" + "/uploads/subcategory/";
+        "https://" + "dataapi.macgence.com" + "/uploads/subcategory/";
     }
     const categorylist = await category.find({});
 
@@ -359,7 +359,7 @@ async function productDetailPage(req,res){
         var datasetUrl = `${process.env.URL}/uploads/upload/`;
     } else {
         var datasetUrl =
-        "http://" + "dataapi.macgence.com" + "/uploads/upload/";
+        "https://" + "dataapi.macgence.com" + "/uploads/upload/";
     }
 
 

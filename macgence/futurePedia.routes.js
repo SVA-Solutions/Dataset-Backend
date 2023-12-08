@@ -62,7 +62,7 @@ router.post("/categoryById",categoryById);
 router.post("/categoryUpdate",categoryUpdate);
 router.post("/categoryDelete",  categoryDelete)
 // ----subcategory--------
-router.post("/addsubcategory",uploadPhoto("product", [{ name: "image", maxCount: 1 }]),addsubcategory);
+router.post("/addsubcategory",uploadPhoto("subcategory", [{ name: "image", maxCount: 1 }]),addsubcategory);
 router.post("/subcategoryListbid",subcategoryListbid);
 router.get("/subcategoryList",subcategoryList);
 router.post("/addsubcategoryList",addsubcategoryList);
