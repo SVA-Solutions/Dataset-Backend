@@ -579,7 +579,7 @@ async function addcategoryList(req, res) {
   const list = []
 
 
-  const Category = await category.find({status:"Active"})
+  const Category = await category.find({ status: "Active" }).sort({ _id: -1 });
 
   return res.status(200).json({
     Category: Category,
