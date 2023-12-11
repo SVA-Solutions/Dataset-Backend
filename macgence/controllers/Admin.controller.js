@@ -461,6 +461,7 @@ async function productUpdate(req, res) {
       image: image,
     }
   }
+  console.log("productData1234566789", productData)
   await product.updateOne({ _id: req.body.id },
     productData
     , function (err, result) {
@@ -578,7 +579,7 @@ async function addcategoryList(req, res) {
   const list = []
 
 
-  const Category = await category.find({})
+  const Category = await category.find({status:"Active"})
 
   return res.status(200).json({
     Category: Category,
@@ -734,7 +735,7 @@ async function addsubcategory(req, res) {
 }
 async function addsubcategoryList(req, res) {
   const CategoryList = await subcategory.find({ category: req.body.id })
-  const categorybyProductlist = await categorybyProduct.find({ Category: { $in: req.body.id } })
+  const categorybyProductlist = await categorybyProduct.find({ Category: { $in: req.body.id }, status:"Active" })
   console.log("Category", CategoryList)
   return res.status(200).json({
     Category: CategoryList,
@@ -866,7 +867,7 @@ async function addsubsubcategoryList(req, res) {
   const list = []
 
 
-  const Category = await subsubcategory.find({ subCategory: req.body.id })
+  const Category = await subsubcategory.find({ subCategory: req.body.id ,status:"Active" })
 
   return res.status(200).json({
     Category: Category,
@@ -944,7 +945,7 @@ async function categorybyproductList(req, res) {
   const data = await categorybyProduct.find({ status: "Active" }).sort({ _id: -1 });
   var list = []
   for (let i = 0; data.length > i; ++i) {
-    var categorydetail = await db.Category.find({ _id: data[i].Category })
+    var categorydetail = await db.Category.find({ _id: data[i].Category , status:"Active" })
     var productlength = await product.find({ category: data[i].id })
     list.push({
       title: data[i].title,
