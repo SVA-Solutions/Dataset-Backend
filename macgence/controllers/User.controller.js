@@ -373,7 +373,6 @@ async function productDetailPage(req,res){
             Age:dataset[d].Age,
             Gender:dataset[d].Gender,
             Annotation:dataset[d].Annotation,
-
             channel1:dataset[d].channel1,
             channel2:dataset[d].channel2,
             English:dataset[d].English,
@@ -384,6 +383,7 @@ async function productDetailPage(req,res){
     }
   
     var categorydata = await db.Category.findOne({_id:productlist.category , status:"Active"})
+    console.log("productlist",productlist)
     const list = {
         title: productlist.title,
         id: productlist._id,
