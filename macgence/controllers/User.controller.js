@@ -363,7 +363,7 @@ async function productDetailPage(req,res){
     }
 
 
-    var productlist = await product.findOne({slug:req.body.id})
+    var productlist = await product.findOne({slug:req.body.id , status:"Active"})
     var datasetlist = []
     var dataset = await db.Dataset.find({productId:productlist._id , status:"Active"})
     
