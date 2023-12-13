@@ -1155,7 +1155,7 @@ async function datasetById(req, res) {
     }
 
     // Extract relevant properties from the MongoDB document
-    const { Format, channel1, channel2, createdAt, image, state, updatedAt ,productId } = data._doc;
+    const { Format, channel1, channel2, createdAt, image, state, updatedAt ,productId  } = data._doc;
 
     const newData = {
       Format,
@@ -1166,6 +1166,7 @@ async function datasetById(req, res) {
       state,
       updatedAt,
       productId,
+      id:Product.id,
       type: Product?.type
     };
 
@@ -1186,94 +1187,61 @@ async function datasetById(req, res) {
 
 // dataset Update
 async function datasetUpdate(req, res) {
-  console.log("datasetUpdatedfadfas", req.body)
+  console.log("datasetUpdatedfadfas", req.body);
   var files = req.files;
-  if (typeof files != "undefined") {
-    if (typeof files.image != "undefined") {
-      var images = "";
-      for (var j = 0; j < files.image.length; j++) {
-        var image_name = files.image[j].filename;
-        images += image_name + ",";
-        var image = images.replace(/,\s*$/, "");
-      }
-    }
-  }
-  else {
-    var image = req.body.image;
-  }
-  if (req.body.type == "Image") {
-    console.log("dfasdfasdfsadfa")
-    await db.Dataset.updateOne({ _id: req.body.id },
-      {
-        productId: req.body.productId,
-        Age: req.body.age,
-        Gender: req.body.gender,
-        Annotation: req.body.Annotation,
-        image: image
-      }, function (err, result) {
-        if (result) {
-          return res.status(200).json({
-            message: "success",
-            status: "1",
-          });
-        } else {
-          return res.status(200).json({
-            message: "Error",
-            status: "0",
-          });
-        }
-      })
-  }
-  if (req.body.type == "Text") {
-    await db.Dataset.updateOne({ _id: req.body.id },
-      {
-        productId: req.body.productId,
-        English: req.body.English,
-        Language: req.body.Language,
-      }, function (err, result) {
-        if (result) {
-          return res.status(200).json({
-            message: "success",
-            status: "1",
-          });
-        } else {
-          return res.status(200).json({
-            message: "Error",
-            status: "0",
-          });
-        }
-      }
-    )
-  }
-  else if (req.body.type == "Audio") {
-    await db.Dataset.updateOne({ _id: req.body.id },
-      {
-        productId: req.body.productId,
-        channel1: req.body.channel1,
-        channel2: req.body.channel2,
-        Format: req.body.Format,
-        image: image
-      }, function (err, result) {
-        if (result) {
-          return res.status(200).json({
-            message: "success",
-            status: "1",
-          });
-        } else {
-          return res.status(200).json({
-            message: "Error",
-            status: "0",
-          });
-        }
-      }
-    )
-  }
-  return res.status(200).json({
-    message: "Error",
-    status: "0",
-  });
 
+  try {
+    let updateData = {};
+
+    if (typeof files !== "undefined" && typeof files.image !== "undefined") {
+      let images = "";
+      for (let j = 0; j < files.image.length; j++) {
+        const image_name = files.image[j].filename;
+        images += image_name + ",";
+      }
+      updateData.image = images.replace(/,\s*$/, "");
+    } else {
+      updateData.image = req.body.image;
+    }
+
+    updateData.productId = req.body.productId;
+
+    if (req.body.type === "Image") {
+      updateData.Age = req.body.age;
+      updateData.Gender = req.body.gender;
+      updateData.Annotation = req.body.Annotation;
+    } else if (req.body.type === "Text") {
+      updateData.English = req.body.English;
+      updateData.Language = req.body.Language;
+    } else if (req.body.type === "Audio") {
+      updateData.channel1 = req.body.channel1;
+      updateData.channel2 = req.body.channel2;
+      updateData.Format = req.body.Format;
+    }
+
+   const result = await db.Dataset.updateOne({ _id: req.body.id }, updateData);
+
+    console.log("result",result)
+    if (result.nModified > 0) {
+      return res.status(200).json({
+        message: "success",
+        status: "1",
+      });
+    } else {
+      return res.status(200).json({
+        message: "Error",
+        status: "0",
+      });
+    }
+  } catch (error) {
+    console.error("Error in datasetUpdate:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      status: "0",
+    });
+  }
 }
+
 
 // dataset Delete
 async function datasetDelete(req, res) {
