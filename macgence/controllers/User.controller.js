@@ -381,7 +381,7 @@ async function productDetailPage(req,res){
             image:PicUrl+dataset[d].image
         });
     }
-  
+   console.log("datasetlist",datasetlist)
     var categorydata = await db.Category.findOne({_id:productlist.category , status:"Active"})
     console.log("productlist",productlist)
     const list = {
