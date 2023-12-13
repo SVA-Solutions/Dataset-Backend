@@ -1063,6 +1063,7 @@ async function datasetList(req, res) {
     console.log("Product", data[i].productId)
     list.push({
       productname: Product?.title,
+      type: Product?.type,
       id: data[i]._id,
     })
   }
@@ -1132,16 +1133,56 @@ async function adddataset(req, res) {
 
 // dataset by id
 async function datasetById(req, res) {
-  console.log("datasetById", req.body)
+  console.log("datasetById", req.body);
 
-  const data = await db.Dataset.findOne({ _id: req.body.id })
+  try {
+    const data = await db.Dataset.findOne({ _id: req.body.id });
 
-  return res.status(200).json({
-    data: data,
-    messgae: "success",
-    status: "1"
-  })
+    if (!data) {
+      return res.status(404).json({
+        message: "Dataset not found",
+        status: "0"
+      });
+    }
+
+    const Product = await db.Product.findOne({ _id: data.productId });
+
+    if (!Product) {
+      return res.status(404).json({
+        message: "Product not found",
+        status: "0"
+      });
+    }
+
+    // Extract relevant properties from the MongoDB document
+    const { Format, channel1, channel2, createdAt, image, state, updatedAt ,productId } = data._doc;
+
+    const newData = {
+      Format,
+      channel1,
+      channel2,
+      createdAt,
+      image,
+      state,
+      updatedAt,
+      productId,
+      type: Product?.type
+    };
+
+    return res.status(200).json({
+      data: newData,
+      message: "success",
+      status: "1"
+    });
+  } catch (error) {
+    console.error("Error in datasetById:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      status: "0"
+    });
+  }
 }
+
 
 // dataset Update
 async function datasetUpdate(req, res) {
