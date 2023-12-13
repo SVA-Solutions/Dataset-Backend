@@ -347,7 +347,7 @@ async function regexapi(req, res) {
     })
 }
 async function productDetailPage(req,res){
- 
+    console.log("datasetlist",req.body)
     if (__dirname == "/macgence/backend/macgence/controllers") {
         var PicUrl = `${process.env.URL}/uploads/product/`;
     } else {
@@ -365,8 +365,8 @@ async function productDetailPage(req,res){
 
     var productlist = await product.findOne({slug:req.body.id , status:"Active"})
     var datasetlist = []
-    var dataset = await db.Dataset.find({productId:productlist._id , status:"Active"})
-    
+    var dataset = await db.Dataset.find({productId:productlist.id , status:"Active"})
+    console.log("datasetlist",dataset)
     for (let d = 0; dataset.length > d; ++d) {
         datasetlist.push({
             productId:dataset[d].productId,
